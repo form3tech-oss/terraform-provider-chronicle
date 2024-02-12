@@ -1,0 +1,30 @@
+builds:
+  - binary: '{{ .ProjectName }}_v{{ .Version }}'
+    mod_timestamp: '{{ .CommitTimestamp }}'
+    flags:
+      - -mod=vendor
+      - -trimpath
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w -X github.com/form3tech-oss/terraform-provider-chronicle/version.ProviderVersion={{.Version}}
+archives:
+  - format: zip
+    files:
+      - 'none*'
+    name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+checksum:
+  algorithm: sha256
+  name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
+release:
+  prerelease: auto
+  name_template: '{{ .Env.NEW_TAG }}'
+changelog:
+  skip: true
