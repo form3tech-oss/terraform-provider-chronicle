@@ -17,14 +17,12 @@ builds:
       - -s -w -X github.com/form3tech-oss/terraform-provider-chronicle/version.ProviderVersion={{.Version}}
 archives:
   - format: zip
-    files:
-      - 'none*'
     name_template: '{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}'
 checksum:
   algorithm: sha256
   name_template: '{{ .ProjectName }}_{{ .Version }}_SHA256SUMS'
-release:
-  prerelease: auto
-  name_template: '{{ .Env.NEW_TAG }}'
 changelog:
-  skip: true
+  filters:
+    exclude:
+      - "^Merge pull request"
+      - "^Merge branch"
