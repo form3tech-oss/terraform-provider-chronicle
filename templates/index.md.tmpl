@@ -1,0 +1,16 @@
+---
+page_title: "Provider: Chronicle"
+description: |-
+  The Chronicle provider.
+---
+# {{ .ProviderShortName }} Provider
+
+## Example Usage
+
+{{ tffile "examples/provider/provider.tf" }}
+
+
+## Configuration
+Note that for each API you can only provide either credentials or access token. Environment variables always take the lowest precedence.
+
+{{ .SchemaMarkdown | trimspace }}

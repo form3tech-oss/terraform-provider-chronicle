@@ -1,0 +1,16 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+{{ .Description | trimspace }}
+
+## Example Usage
+
+{{ tffile "examples/resources/feed/api/microsoft_office_365_management_activity/main.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
