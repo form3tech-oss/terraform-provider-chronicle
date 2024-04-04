@@ -52,9 +52,6 @@ func sendRequest(client *Client, httpClient *http.Client, method, userAgent stri
 				return errorForStatusCode(res, err)
 			}
 
-			if err != nil {
-				return err
-			}
 			return nil
 		}, retry.Attempts(client.requestAttempts), retry.DelayType(retry.BackOffDelay), retry.OnRetry(func(n uint, err error) {
 			log.Printf("[DEBUG] Retrying request after error: %v", err)

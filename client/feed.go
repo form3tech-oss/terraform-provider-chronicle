@@ -273,6 +273,10 @@ func newConcreteFeedConfiguration(feedSourceType, logType string) ConcreteFeedCo
 
 func newAPIConcreteFeedConfigurationFromLogType(logType string) ConcreteFeedConfiguration {
 	switch logType {
+
+	case "AZURE_AD_AUDIT", "AZURE_AD_CONTEXT", "AZURE_AD", "AZURE_MDM_INTUNE", "MICROSOFT_GRAPH_ALERT":
+		return &MicrosoftGraphAPIFeedConfiguration{ContentType: logType}
+
 	case MicrosoftOffice365ManagementActivityFeedLogType:
 		return &MicrosoftOffice365ManagementActivityFeedConfiguration{}
 
