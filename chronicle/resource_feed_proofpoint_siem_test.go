@@ -44,6 +44,7 @@ func TestAccChronicleProofpointSIEM_Basic(t *testing.T) {
 
 func TestAccChronicleProofpointSIEM_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -68,7 +69,7 @@ func TestAccChronicleProofpointSIEM_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleProofpointSIEM(displayName, enabled, namespace, labels, user1, secret1),
+				Config: testAccCheckChronicleProofpointSIEM(displayName1, enabled, namespace, labels, user1, secret1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleProofpointSIEMExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
@@ -89,6 +90,7 @@ func TestAccChronicleProofpointSIEM_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleProofpointSIEM_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	notEnabled := "true"
 	namespace := "test"
@@ -112,7 +114,7 @@ func TestAccChronicleProofpointSIEM_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleProofpointSIEM(displayName, notEnabled, namespace, labels, user, secret),
+				Config: testAccCheckChronicleProofpointSIEM(displayName1, notEnabled, namespace, labels, user, secret),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleProofpointSIEMExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),

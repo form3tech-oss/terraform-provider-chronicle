@@ -49,6 +49,7 @@ func TestAccChronicleFeedAmazonS3_Basic(t *testing.T) {
 
 func TestAccChronicleFeedAmazonS3_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	enabled := "true"
 	namespace := "test"
@@ -79,7 +80,7 @@ func TestAccChronicleFeedAmazonS3_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonS3(displayName, logType, enabled, namespace, labels, s3Uri, s3SourceType, sourceDeleteOptions, region1, accesKeyID1, secretAccessKey1),
+				Config: testAccCheckChronicleFeedAmazonS3(displayName1, logType, enabled, namespace, labels, s3Uri, s3SourceType, sourceDeleteOptions, region1, accesKeyID1, secretAccessKey1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -101,6 +102,7 @@ func TestAccChronicleFeedAmazonS3_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleFeedAmazonS3_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	enabled := "true"
 	notEnabled := "false"
@@ -129,7 +131,7 @@ func TestAccChronicleFeedAmazonS3_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonS3(displayName, logType, notEnabled, namespace, labels, s3Uri, s3SourceType, sourceDeleteOptions, region, accesKeyID, secretAccessKey),
+				Config: testAccCheckChronicleFeedAmazonS3(displayName1, logType, notEnabled, namespace, labels, s3Uri, s3SourceType, sourceDeleteOptions, region, accesKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -150,6 +152,7 @@ func TestAccChronicleFeedAmazonS3_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleFeedAmazonS3_UpdateLogType(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	logType1 := "AWS_CLOUDTRAIL"
 	notEnabled := "false"
@@ -178,7 +181,7 @@ func TestAccChronicleFeedAmazonS3_UpdateLogType(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonS3(displayName, logType1, notEnabled, namespace, labels, s3Uri, s3SourceType, sourceDeleteOptions, region, accesKeyID, secretAccessKey),
+				Config: testAccCheckChronicleFeedAmazonS3(displayName1, logType1, notEnabled, namespace, labels, s3Uri, s3SourceType, sourceDeleteOptions, region, accesKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType1),

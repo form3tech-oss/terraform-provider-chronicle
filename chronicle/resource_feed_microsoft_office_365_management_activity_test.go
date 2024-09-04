@@ -50,6 +50,7 @@ func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_Basic(t *testing.T
 
 func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_UpdateAuth(t *testing.T) {
 	displayName := "testtf" + randString(10)
+	displayName1 := "testf" + randString(10)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -80,7 +81,7 @@ func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_UpdateAuth(t *test
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedMicrosoftOffice365ManagementActivity(displayName, enabled, namespace, labels, hostname, tenantID, contentType, clientID1, clientSecret1),
+				Config: testAccCheckChronicleFeedMicrosoftOffice365ManagementActivity(displayName1, enabled, namespace, labels, hostname, tenantID, contentType, clientID1, clientSecret1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
@@ -104,6 +105,7 @@ func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_UpdateAuth(t *test
 
 func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_UpdateEnabled(t *testing.T) {
 	displayName := "testtf" + randString(10)
+	displayName1 := "testf" + randString(10)
 	enabled := "true"
 	notEnabled := "false"
 	namespace := "test"
@@ -133,7 +135,7 @@ func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_UpdateEnabled(t *t
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedMicrosoftOffice365ManagementActivity(displayName, notEnabled, namespace, labels, hostname, tenantID, contentType, clientID, clientSecret),
+				Config: testAccCheckChronicleFeedMicrosoftOffice365ManagementActivity(displayName1, notEnabled, namespace, labels, hostname, tenantID, contentType, clientID, clientSecret),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),

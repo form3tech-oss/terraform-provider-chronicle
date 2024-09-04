@@ -1,11 +1,11 @@
 package chronicle
 
 import (
-	"math/rand"
 	"strings"
 	"testing"
 
 	chronicle "github.com/form3tech-oss/terraform-provider-chronicle/client"
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
@@ -37,11 +37,11 @@ func testAccPreCheck(t *testing.T) {
 }
 
 func randString(length int) string {
-	result := make([]byte, length)
-	set := "abcdefghijklmnopqrstuvwxyz012346789"
-	for i := 0; i < length; i++ {
-		//nolint:all
-		result[i] = set[rand.Intn(len(set))]
+	id := uuid.New().String()
+
+	if len(id) > length {
+		id = id[:length]
 	}
-	return string(result)
+
+	return id
 }
