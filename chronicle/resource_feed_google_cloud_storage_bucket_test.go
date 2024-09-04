@@ -48,6 +48,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_Basic(t *testing.T) {
 
 func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateBucketSourceType(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "ONEPASSWORD"
 	enabled := "true"
 	namespace := "test"
@@ -76,7 +77,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateBucketSourceType(t *test
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName, logType, enabled, namespace, labels, bucketUri, bucketSourceType1, sourceDeleteOptions),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName1, logType, enabled, namespace, labels, bucketUri, bucketSourceType1, sourceDeleteOptions),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageBucketExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -99,6 +100,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateBucketSourceType(t *test
 
 func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateSourceDeletionOptions(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "ONEPASSWORD"
 	enabled := "true"
 	namespace := "test"
@@ -127,7 +129,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateSourceDeletionOptions(t 
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName, logType, enabled, namespace, labels, bucketUri, bucketSourceType, sourceDeleteOptions1),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName1, logType, enabled, namespace, labels, bucketUri, bucketSourceType, sourceDeleteOptions1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageBucketExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -150,6 +152,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateSourceDeletionOptions(t 
 
 func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateLogType(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "ONEPASSWORD"
 	logType1 := "AWS_CLOUDTRAIL"
 	enabled := "true"
@@ -178,7 +181,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateLogType(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName, logType1, enabled, namespace, labels, bucketUri, bucketSourceType, sourceDeleteOptions),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName1, logType1, enabled, namespace, labels, bucketUri, bucketSourceType, sourceDeleteOptions),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageBucketExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType1),
@@ -201,6 +204,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateLogType(t *testing.T) {
 
 func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateNamespace(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "ONEPASSWORD"
 	enabled := "true"
 	namespace := "test"
@@ -229,7 +233,7 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateNamespace(t *testing.T) 
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName, logType, enabled, namespace1, labels, bucketUri, bucketSourceType, sourceDeleteOptions),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName1, logType, enabled, namespace1, labels, bucketUri, bucketSourceType, sourceDeleteOptions),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageBucketExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),

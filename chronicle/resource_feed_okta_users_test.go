@@ -47,6 +47,7 @@ func TestAccChronicleFeedOktaUsers_Basic(t *testing.T) {
 
 func TestAccChronicleFeedOktaUsers_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -74,7 +75,7 @@ func TestAccChronicleFeedOktaUsers_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedOktaUsers(displayName, enabled, namespace, labels, hostname, manager_id, key1, value1),
+				Config: testAccCheckChronicleFeedOktaUsers(displayName1, enabled, namespace, labels, hostname, manager_id, key1, value1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedOktaUsersExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
@@ -95,6 +96,7 @@ func TestAccChronicleFeedOktaUsers_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleFeedOktaUsers_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	notEnabled := "false"
 	namespace := "test"
@@ -121,7 +123,7 @@ func TestAccChronicleFeedOktaUsers_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedOktaUsers(displayName, notEnabled, namespace, labels, hostname, manager_id, key, value),
+				Config: testAccCheckChronicleFeedOktaUsers(displayName1, notEnabled, namespace, labels, hostname, manager_id, key, value),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedOktaUsersExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
@@ -142,6 +144,7 @@ func TestAccChronicleFeedOktaUsers_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleOktaUsers_UpdateHostname(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -168,7 +171,7 @@ func TestAccChronicleOktaUsers_UpdateHostname(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedOktaUsers(displayName, enabled, namespace, labels, hostname1, manager_id, key, value),
+				Config: testAccCheckChronicleFeedOktaUsers(displayName1, enabled, namespace, labels, hostname1, manager_id, key, value),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedOktaUsersExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),

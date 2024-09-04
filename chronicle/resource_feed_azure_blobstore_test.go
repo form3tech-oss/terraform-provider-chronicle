@@ -47,6 +47,7 @@ func TestAccChronicleFeedAzureBlobStore_Basic(t *testing.T) {
 
 func TestAccChronicleFeedAzureBlobStore_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	enabled := "true"
 	namespace := "test"
@@ -73,7 +74,7 @@ func TestAccChronicleFeedAzureBlobStore_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStore(displayName, logType, enabled, namespace, labels, uri, sourceType, sharedKey1),
+				Config: testAccCheckChronicleFeedAzureBlobStore(displayName1, logType, enabled, namespace, labels, uri, sourceType, sharedKey1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -97,6 +98,7 @@ func TestAccChronicleFeedAzureBlobStore_UpdateEnabled(t *testing.T) {
 	enabled := "true"
 	notEnabled := "false"
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -121,7 +123,7 @@ func TestAccChronicleFeedAzureBlobStore_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStore(displayName, logType, notEnabled, namespace, labels, uri, sourceType, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStore(displayName1, logType, notEnabled, namespace, labels, uri, sourceType, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -143,6 +145,7 @@ func TestAccChronicleFeedAzureBlobStore_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleFeedAzureBlobStore_UpdateLogType(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	notEnabled := "false"
 	logType := "GITHUB"
 	logType1 := "AWS_CLOUDTRAIL"
@@ -168,7 +171,7 @@ func TestAccChronicleFeedAzureBlobStore_UpdateLogType(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStore(displayName, logType1, notEnabled, namespace, labels, uri, sourceType, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStore(displayName1, logType1, notEnabled, namespace, labels, uri, sourceType, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType1),

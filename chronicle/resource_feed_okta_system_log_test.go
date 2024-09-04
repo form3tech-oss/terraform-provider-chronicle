@@ -46,6 +46,7 @@ func TestAccChronicleFeedOktaSystemLog_Basic(t *testing.T) {
 
 func TestAccChronicleFeedOktaSystemLog_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -72,7 +73,7 @@ func TestAccChronicleFeedOktaSystemLog_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedOktaSystemLog(displayName, enabled, namespace, labels, hostname, key1, value1),
+				Config: testAccCheckChronicleFeedOktaSystemLog(displayName1, enabled, namespace, labels, hostname, key1, value1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedOktaSystemLogExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
@@ -93,6 +94,7 @@ func TestAccChronicleFeedOktaSystemLog_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleFeedOktaSystemLog_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	notEnabled := "false"
 	namespace := "test"
@@ -118,7 +120,7 @@ func TestAccChronicleFeedOktaSystemLog_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedOktaSystemLog(displayName, notEnabled, namespace, labels, hostname, key, value),
+				Config: testAccCheckChronicleFeedOktaSystemLog(displayName1, notEnabled, namespace, labels, hostname, key, value),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedOktaSystemLogExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
@@ -139,6 +141,7 @@ func TestAccChronicleFeedOktaSystemLog_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleOktaSystemLog_UpdateHostname(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -164,7 +167,7 @@ func TestAccChronicleOktaSystemLog_UpdateHostname(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedOktaSystemLog(displayName, enabled, namespace, labels, hostname1, key, value),
+				Config: testAccCheckChronicleFeedOktaSystemLog(displayName1, enabled, namespace, labels, hostname1, key, value),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedOktaSystemLogExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),

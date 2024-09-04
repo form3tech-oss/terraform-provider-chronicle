@@ -104,6 +104,7 @@ func TestAccChronicleFeedAmazonSQS_BasicWithS3Auth(t *testing.T) {
 
 func TestAccChronicleFeedAmazonSQS_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	enabled := "true"
 	namespace := "test"
@@ -139,7 +140,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName, logType, enabled, namespace, labels, queue, region1, accountNumber,
+				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName1, logType, enabled, namespace, labels, queue, region1, accountNumber,
 					sourceDeleteOptions, sqsAccesKeyID1, sqsSecretAccessKey1, s3AccesKeyID1, s3SecretAccessKey1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSExists(rootRef),
@@ -162,6 +163,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleFeedAmazonSQS_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	enabled := "true"
 	notEnabled := "false"
@@ -193,7 +195,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName, logType, notEnabled, namespace, labels, queue, region, accountNumber,
+				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName1, logType, notEnabled, namespace, labels, queue, region, accountNumber,
 					sourceDeleteOptions, sqsAccesKeyID, sqsSecretAccessKey, s3AccesKeyID, s3SecretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSExists(rootRef),
@@ -215,6 +217,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleFeedAmazonSQS_UpdateLogType(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	logType1 := "AWS_CLOUDTRAIL"
 	notEnabled := "false"
@@ -246,7 +249,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateLogType(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName, logType1, notEnabled, namespace, labels, queue, region, accountNumber,
+				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName1, logType1, notEnabled, namespace, labels, queue, region, accountNumber,
 					sourceDeleteOptions, sqsAccesKeyID, sqsSecretAccessKey, s3AccesKeyID, s3SecretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSExists(rootRef),
@@ -268,6 +271,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateLogType(t *testing.T) {
 
 func TestAccChronicleFeedAmazonSQS_UpdateAccountNumber(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	notEnabled := "false"
 	namespace := "test"
@@ -300,7 +304,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateAccountNumber(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName, logType, notEnabled, namespace, labels, queue, region, accountNumber1,
+				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName1, logType, notEnabled, namespace, labels, queue, region, accountNumber1,
 					sourceDeleteOptions, sqsAccesKeyID, sqsSecretAccessKey, s3AccesKeyID, s3SecretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSExists(rootRef),
@@ -323,6 +327,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateAccountNumber(t *testing.T) {
 
 func TestAccChronicleFeedAmazonSQS_UpdateRegion(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(10)
 	logType := "GITHUB"
 	notEnabled := "false"
 	namespace := "test"
@@ -355,7 +360,7 @@ func TestAccChronicleFeedAmazonSQS_UpdateRegion(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName, logType, notEnabled, namespace, labels, queue, region1, accountNumber,
+				Config: testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName1, logType, notEnabled, namespace, labels, queue, region1, accountNumber,
 					sourceDeleteOptions, sqsAccesKeyID, sqsSecretAccessKey, s3AccesKeyID, s3SecretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSExists(rootRef),

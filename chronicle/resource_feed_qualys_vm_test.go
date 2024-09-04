@@ -46,6 +46,7 @@ func TestAccChronicleFeedQualysVM_Basic(t *testing.T) {
 
 func TestAccChronicleFeedQualysVM_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -72,7 +73,7 @@ func TestAccChronicleFeedQualysVM_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedQualysVM(displayName, enabled, namespace, labels, hostname, user1, secret1),
+				Config: testAccCheckChronicleFeedQualysVM(displayName1, enabled, namespace, labels, hostname, user1, secret1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedQualysVMExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
@@ -94,6 +95,7 @@ func TestAccChronicleFeedQualysVM_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleFeedQualysVM_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	notEnabled := "false"
 	namespace := "test"
@@ -119,7 +121,7 @@ func TestAccChronicleFeedQualysVM_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedQualysVM(displayName, notEnabled, namespace, labels, hostname, user, secret),
+				Config: testAccCheckChronicleFeedQualysVM(displayName1, notEnabled, namespace, labels, hostname, user, secret),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedQualysVMExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
@@ -140,6 +142,7 @@ func TestAccChronicleFeedQualysVM_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleFeedQualysVM_UpdateHostname(t *testing.T) {
 	displayName := "test" + randString(10)
+	displayName1 := "test" + randString(40)
 	notEnabled := "false"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -165,7 +168,7 @@ func TestAccChronicleFeedQualysVM_UpdateHostname(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedQualysVM(displayName, notEnabled, namespace, labels, hostname1, user, secret),
+				Config: testAccCheckChronicleFeedQualysVM(displayName1, notEnabled, namespace, labels, hostname1, user, secret),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedQualysVMExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),

@@ -46,6 +46,7 @@ func TestAccChronicleFeedThinkstCanary_Basic(t *testing.T) {
 
 func TestAccChronicleFeedThinkstCanary_UpdateAuth(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -71,7 +72,7 @@ func TestAccChronicleFeedThinkstCanary_UpdateAuth(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedThinkstCanary(displayName, enabled, namespace, labels, hostname, key, value1),
+				Config: testAccCheckChronicleFeedThinkstCanary(displayName1, enabled, namespace, labels, hostname, key, value1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedThinkstCanaryExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
@@ -92,6 +93,7 @@ func TestAccChronicleFeedThinkstCanary_UpdateAuth(t *testing.T) {
 
 func TestAccChronicleFeedThinkstCanary_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	notEnabled := "false"
 	namespace := "test"
@@ -117,7 +119,7 @@ func TestAccChronicleFeedThinkstCanary_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedThinkstCanary(displayName, notEnabled, namespace, labels, hostname, key, value),
+				Config: testAccCheckChronicleFeedThinkstCanary(displayName1, notEnabled, namespace, labels, hostname, key, value),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedThinkstCanaryExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
@@ -138,6 +140,7 @@ func TestAccChronicleFeedThinkstCanary_UpdateEnabled(t *testing.T) {
 
 func TestAccChronicleThinkstCanary_UpdateHostname(t *testing.T) {
 	displayName := "test" + randString(40)
+	displayName1 := "test" + randString(40)
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -163,7 +166,7 @@ func TestAccChronicleThinkstCanary_UpdateHostname(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedThinkstCanary(displayName, enabled, namespace, labels, hostname1, key, value),
+				Config: testAccCheckChronicleFeedThinkstCanary(displayName1, enabled, namespace, labels, hostname1, key, value),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedThinkstCanaryExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
