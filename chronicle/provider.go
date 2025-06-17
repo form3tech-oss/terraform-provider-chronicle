@@ -233,7 +233,11 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 		opts = append(opts, chronicle.WithRequestTimeout(time.Duration(v.(int))*time.Second))
 	}
 	if v, ok := d.GetOk("request_attempts"); ok {
-		opts = append(opts, chronicle.WithRequestAttempts(uint(v.(int))))
+		attempts := v.(int)
+		if attempts < 0 {
+			return nil, diag.FromErr(fmt.Errorf("request_attempts must be non-negative"))
+		}
+		opts = append(opts, chronicle.WithRequestAttempts(uint(attempts)))
 	}
 
 	//nolint:all
