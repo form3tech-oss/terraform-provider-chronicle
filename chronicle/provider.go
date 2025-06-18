@@ -197,6 +197,7 @@ func Provider() *schema.Provider {
 			"chronicle_feed_amazon_s3":                                NewResourceFeedAmazonS3().TerraformResource,
 			"chronicle_feed_amazon_sqs":                               NewResourceFeedAmazonSQS().TerraformResource,
 			"chronicle_feed_qualys_vm":                                NewResourceFeedQualysVM().TerraformResource,
+			"chronicle_feed_microsoft_graph_api":                      NewResourceFeedMicrosoftGraphAPI().TerraformResource,
 			"chronicle_feed_microsoft_office_365_management_activity": NewResourceFeedMicrosoftOffice365ManagementActivity().TerraformResource,
 			"chronicle_feed_okta_system_log":                          NewResourceFeedOktaSystemLog().TerraformResource,
 			"chronicle_feed_okta_users":                               NewResourceFeedOktaUsers().TerraformResource,

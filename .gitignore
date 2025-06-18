@@ -33,3 +33,4 @@ website/vendor
 !command/test-fixtures/**/.terraform/
 
 dist/
+terraform-provider-chronicle
