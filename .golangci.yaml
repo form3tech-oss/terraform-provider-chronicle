@@ -1,7 +1,5 @@
 run:
   concurrency: 1
-  skip-dirs:
-    - vendor
   timeout: 3m
   modules-download-mode: vendor
   allow-parallel-runners: false
@@ -13,7 +11,6 @@ linters:
     - staticcheck
     - typecheck
     - unused
-    - vet
     - stylecheck
     - gocyclo
     - gofmt
@@ -22,7 +19,6 @@ linters:
     - asciicheck
     - bodyclose
     - dogsled
-    - exportloopref
     - gocognit
     - gocritic
     - godot
@@ -44,7 +40,10 @@ linters:
 
 linters-settings:
   errcheck:
-    ignore: bytes:.*,io:Close|Write
+    exclude-functions:
+      - bytes.*
+      - io.Close
+      - io.Write
 
   lll:
     line-length: 180
@@ -54,6 +53,8 @@ linters-settings:
     camel_name: false
 
 issues:
+  exclude-dirs:
+    - vendor
   exclude-rules:
     - path: _test\.go
       linters:
