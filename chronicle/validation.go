@@ -74,6 +74,16 @@ func validateFeedAzureBlobStoreSourceDeleteOption(v interface{}, k cty.Path) dia
 	return nil
 }
 
+func validateFeedV2SourceDeleteOption(v interface{}, k cty.Path) diag.Diagnostics {
+	deletionOptions := []string{FeedV2SourceDeleteOptionNever, FeedV2SourceDeleteOptionOnSuccess}
+	option := v.(string)
+	if !contains(deletionOptions, option) {
+		return diag.FromErr(fmt.Errorf("source deletion option %s not valid, valid options are: %s", option, deletionOptions))
+	}
+
+	return nil
+}
+
 func validateFeedS3SourceType(v interface{}, k cty.Path) diag.Diagnostics {
 	sourceTypes := []string{FeedS3SourceTypeFiles, FeedS3SourceTypeFolders, FeedS3SourceTypeFoldersRecursive}
 	sourceType := v.(string)

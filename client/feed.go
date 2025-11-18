@@ -11,12 +11,16 @@ import (
 )
 
 const (
-	FeedSourceTypeAPI            = "API"
-	FeedSourceTypeAzureBlobStore = "AZURE_BLOBSTORE"
-	FeedSourceTypeGCS            = "GOOGLE_CLOUD_STORAGE"
-	FeedSourceTypeS3             = "AMAZON_S3"
-	FeedSourceTypeSQS            = "AMAZON_SQS"
-	FeedSourceTypeHTTP           = "HTTP"
+	FeedSourceTypeAPI              = "API"
+	FeedSourceTypeAzureBlobStore   = "AZURE_BLOBSTORE"
+	FeedSourceTypeAzureBlobStoreV2 = "AZURE_BLOBSTORE_V2"
+	FeedSourceTypeGCS              = "GOOGLE_CLOUD_STORAGE"
+	FeedSourceTypeGCSV2            = "GOOGLE_CLOUD_STORAGE_V2"
+	FeedSourceTypeS3               = "AMAZON_S3"
+	FeedSourceTypeS3V2             = "AMAZON_S3_V2"
+	FeedSourceTypeSQS              = "AMAZON_SQS"
+	FeedSourceTypeSQSV2            = "AMAZON_SQS_V2"
+	FeedSourceTypeHTTP             = "HTTP"
 )
 
 type ConcreteFeedConfiguration interface {
@@ -257,14 +261,22 @@ func newConcreteFeedConfiguration(feedSourceType, logType string) ConcreteFeedCo
 	switch feedSourceType {
 	case FeedSourceTypeS3:
 		return &S3FeedConfiguration{}
+	case FeedSourceTypeS3V2:
+		return &S3V2FeedConfiguration{}
 	case FeedSourceTypeSQS:
 		return &SQSFeedConfiguration{}
+	case FeedSourceTypeSQSV2:
+		return &SQSV2FeedConfiguration{}
 	case FeedSourceTypeAPI:
 		return newAPIConcreteFeedConfigurationFromLogType(logType)
 	case FeedSourceTypeGCS:
 		return &GCPBucketFeedConfiguration{}
+	case FeedSourceTypeGCSV2:
+		return &GCSV2FeedConfiguration{}
 	case FeedSourceTypeAzureBlobStore:
 		return &AzureBlobStoreFeedConfiguration{}
+	case FeedSourceTypeAzureBlobStoreV2:
+		return &AzureBlobStoreV2FeedConfiguration{}
 
 	default:
 		return nil
