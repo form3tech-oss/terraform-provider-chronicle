@@ -27,10 +27,11 @@ func NewResourceFeedAmazonS3V2() *ResourceFeedAmazonS3V2 {
 - ON_SUCCESS: Delete files and empty directories from the source after successful ingestion.`,
 			},
 			"max_lookback_days": {
-				Type:        schema.TypeInt,
-				Optional:    true,
-				Default:     180,
-				Description: `The maximum number of days in the past to look for files. Default is 180 days.`,
+				Type:             schema.TypeInt,
+				Optional:         true,
+				Default:          180,
+				ValidateDiagFunc: validateMaxLookbackDays,
+				Description:      `The maximum number of days in the past to look for files. Must be between 1 and 180. Default is 180 days.`,
 			},
 			"authentication": {
 				Type:        schema.TypeList,

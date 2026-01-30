@@ -5,11 +5,11 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-type ResourceFeedGoogleCloudStorageV2 struct {
+type ResourceFeedGoogleCloudStorageEventDriven struct {
 	TerraformResource *schema.Resource
 }
 
-func NewResourceFeedGoogleCloudStorageV2() *ResourceFeedGoogleCloudStorageV2 {
+func NewResourceFeedGoogleCloudStorageEventDriven() *ResourceFeedGoogleCloudStorageEventDriven {
 	details := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"bucket_uri": {
@@ -17,6 +17,11 @@ func NewResourceFeedGoogleCloudStorageV2() *ResourceFeedGoogleCloudStorageV2 {
 				Required:         true,
 				ValidateDiagFunc: validateGCSURI,
 				Description:      `The Google Cloud Storage bucket URI in the format gs://bucket-name/path/.`,
+			},
+			"pubsub_subscription": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `The Pub/Sub subscription name. Format: projects/your-project/subscriptions/your-subscription`,
 			},
 			"source_delete_options": {
 				Type:             schema.TypeString,
@@ -36,18 +41,18 @@ func NewResourceFeedGoogleCloudStorageV2() *ResourceFeedGoogleCloudStorageV2 {
 			},
 		},
 	}
-	description := "Creates a V2 feed from Google Cloud Storage. This feed type uses the Google Cloud Storage Transfer Service for improved ingestion. Authentication is handled via the Google Security Operations service account."
-	resource := &ResourceFeedGoogleCloudStorageV2{}
+	description := "Creates an event-driven feed from Google Cloud Storage using Pub/Sub notifications. This feed type uses Google Cloud Storage Transfer Service with push-based ingestion for reduced latency. Authentication is handled via the Google Security Operations service account."
+	resource := &ResourceFeedGoogleCloudStorageEventDriven{}
 	resource.TerraformResource = newFeedResourceSchema(details, resource, description, true)
 
 	return resource
 }
 
-func (f *ResourceFeedGoogleCloudStorageV2) getLogType() string {
+func (f *ResourceFeedGoogleCloudStorageEventDriven) getLogType() string {
 	return ""
 }
 
-func (f *ResourceFeedGoogleCloudStorageV2) expandConcreteFeedConfiguration(d *schema.ResourceData) chronicle.ConcreteFeedConfiguration {
+func (f *ResourceFeedGoogleCloudStorageEventDriven) expandConcreteFeedConfiguration(d *schema.ResourceData) chronicle.ConcreteFeedConfiguration {
 	resourceDetailsInterface := readSliceFromResource(d, "details")
 	if resourceDetailsInterface == nil {
 		return nil
@@ -55,31 +60,34 @@ func (f *ResourceFeedGoogleCloudStorageV2) expandConcreteFeedConfiguration(d *sc
 
 	resourceDetails := resourceDetailsInterface[0].(map[string]interface{})
 
-	return &chronicle.GCSV2FeedConfiguration{
+	return &chronicle.GCSEventDrivenFeedConfiguration{
 		BucketURI:           resourceDetails["bucket_uri"].(string),
+		PubsubSubscription:  resourceDetails["pubsub_subscription"].(string),
 		SourceDeleteOptions: resourceDetails["source_delete_options"].(string),
 		MaxLookbackDays:     resourceDetails["max_lookback_days"].(int),
 	}
 }
 
 //nolint:all
-func (f *ResourceFeedGoogleCloudStorageV2) flattenDetailsFromReadOperation(originalConf chronicle.ConcreteFeedConfiguration, readConf chronicle.ConcreteFeedConfiguration) []map[string]interface{} {
+func (f *ResourceFeedGoogleCloudStorageEventDriven) flattenDetailsFromReadOperation(originalConf chronicle.ConcreteFeedConfiguration, readConf chronicle.ConcreteFeedConfiguration) []map[string]interface{} {
 
-	readGCSConf := readConf.(*chronicle.GCSV2FeedConfiguration)
+	readGCSConf := readConf.(*chronicle.GCSEventDrivenFeedConfiguration)
 
 	// Import Case
 	if originalConf == nil {
 		return []map[string]interface{}{{
 			"bucket_uri":            readGCSConf.BucketURI,
+			"pubsub_subscription":   readGCSConf.PubsubSubscription,
 			"source_delete_options": readGCSConf.SourceDeleteOptions,
 			"max_lookback_days":     readGCSConf.MaxLookbackDays,
 		}}
 	}
 
-	originalGCSConf := originalConf.(*chronicle.GCSV2FeedConfiguration)
+	originalGCSConf := originalConf.(*chronicle.GCSEventDrivenFeedConfiguration)
 	// Default Case
 	return []map[string]interface{}{{
 		"bucket_uri":            readGCSConf.BucketURI,
+		"pubsub_subscription":   readGCSConf.PubsubSubscription,
 		"source_delete_options": originalGCSConf.SourceDeleteOptions, // not returned
 		"max_lookback_days":     readGCSConf.MaxLookbackDays,
 	}}

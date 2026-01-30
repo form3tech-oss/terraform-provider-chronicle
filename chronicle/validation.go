@@ -84,6 +84,14 @@ func validateFeedV2SourceDeleteOption(v interface{}, k cty.Path) diag.Diagnostic
 	return nil
 }
 
+func validateMaxLookbackDays(v interface{}, k cty.Path) diag.Diagnostics {
+	days := v.(int)
+	if days < 1 || days > 180 {
+		return diag.FromErr(fmt.Errorf("max_lookback_days must be between 1 and 180, got %d", days))
+	}
+	return nil
+}
+
 func validateFeedS3SourceType(v interface{}, k cty.Path) diag.Diagnostics {
 	sourceTypes := []string{FeedS3SourceTypeFiles, FeedS3SourceTypeFolders, FeedS3SourceTypeFoldersRecursive}
 	sourceType := v.(string)

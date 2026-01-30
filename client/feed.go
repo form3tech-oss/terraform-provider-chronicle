@@ -16,6 +16,7 @@ const (
 	FeedSourceTypeAzureBlobStoreV2 = "AZURE_BLOBSTORE_V2"
 	FeedSourceTypeGCS              = "GOOGLE_CLOUD_STORAGE"
 	FeedSourceTypeGCSV2            = "GOOGLE_CLOUD_STORAGE_V2"
+	FeedSourceTypeGCSEventDriven   = "GOOGLE_CLOUD_STORAGE_EVENT_DRIVEN"
 	FeedSourceTypeS3               = "AMAZON_S3"
 	FeedSourceTypeS3V2             = "AMAZON_S3_V2"
 	FeedSourceTypeSQS              = "AMAZON_SQS"
@@ -273,6 +274,8 @@ func newConcreteFeedConfiguration(feedSourceType, logType string) ConcreteFeedCo
 		return &GCPBucketFeedConfiguration{}
 	case FeedSourceTypeGCSV2:
 		return &GCSV2FeedConfiguration{}
+	case FeedSourceTypeGCSEventDriven:
+		return &GCSEventDrivenFeedConfiguration{}
 	case FeedSourceTypeAzureBlobStore:
 		return &AzureBlobStoreFeedConfiguration{}
 	case FeedSourceTypeAzureBlobStoreV2:

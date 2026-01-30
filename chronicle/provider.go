@@ -205,6 +205,7 @@ func Provider() *schema.Provider {
 			"chronicle_feed_proofpoint_siem":                          NewResourceFeedProofpointSIEM().TerraformResource,
 			"chronicle_feed_google_cloud_storage_bucket":              NewResourceFeedGoogleCloudStorageBucket().TerraformResource,
 			"chronicle_feed_google_cloud_storage_v2":                  NewResourceFeedGoogleCloudStorageV2().TerraformResource,
+			"chronicle_feed_google_cloud_storage_event_driven":        NewResourceFeedGoogleCloudStorageEventDriven().TerraformResource,
 			"chronicle_feed_azure_blobstore":                          NewResourceFeedAzureBlobStore().TerraformResource,
 			"chronicle_feed_azure_blobstore_v2":                       NewResourceFeedAzureBlobStoreV2().TerraformResource,
 			"chronicle_feed_thinkst_canary":                           NewResourceFeedThinkstCanary().TerraformResource,
