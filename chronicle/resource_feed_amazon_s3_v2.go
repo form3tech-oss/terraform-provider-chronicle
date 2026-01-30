@@ -66,7 +66,8 @@ func NewResourceFeedAmazonS3V2() *ResourceFeedAmazonS3V2 {
 			},
 		},
 	}
-	description := "Creates a V2 feed from Amazon Simple Storage Service (S3). This feed type uses the Google Cloud Storage Transfer Service for improved ingestion."
+	description := "Creates a V2 feed from Amazon Simple Storage Service (S3). " +
+		"This feed type uses the Google Cloud Storage Transfer Service for improved ingestion."
 	resource := &ResourceFeedAmazonS3V2{}
 	resource.TerraformResource = newFeedResourceSchema(details, resource, description, true)
 

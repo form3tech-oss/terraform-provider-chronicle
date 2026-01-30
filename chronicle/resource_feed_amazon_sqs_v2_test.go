@@ -30,7 +30,9 @@ func TestAccChronicleFeedAmazonSQSV2_Basic(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedAmazonSQSV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSV2(displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName, sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
+				Config: testAccCheckChronicleFeedAmazonSQSV2(
+					displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName,
+					sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -75,7 +77,9 @@ func TestAccChronicleFeedAmazonSQSV2_WithS3Auth(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedAmazonSQSV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSV2(displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName, sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, s3AccessKeyID, s3SecretAccessKey),
+				Config: testAccCheckChronicleFeedAmazonSQSV2(
+					displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName,
+					sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, s3AccessKeyID, s3SecretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -88,9 +92,11 @@ func TestAccChronicleFeedAmazonSQSV2_WithS3Auth(t *testing.T) {
 				ResourceName:      rootRef,
 				ImportState:       true,
 				ImportStateVerify: true,
-				ImportStateVerifyIgnore: []string{"display_name", "state", "details.0.source_delete_options",
+				ImportStateVerifyIgnore: []string{
+					"display_name", "state", "details.0.source_delete_options",
 					"details.0.authentication.0.sqs_access_key_id", "details.0.authentication.0.sqs_secret_access_key",
-					"details.0.authentication.0.s3_authentication.0.access_key_id", "details.0.authentication.0.s3_authentication.0.secret_access_key"},
+					"details.0.authentication.0.s3_authentication.0.access_key_id",
+					"details.0.authentication.0.s3_authentication.0.secret_access_key"},
 			},
 		},
 	})
@@ -120,14 +126,18 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateEnabled(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedAmazonSQSV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSV2(displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName, sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
+				Config: testAccCheckChronicleFeedAmazonSQSV2(
+					displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName,
+					sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSV2(displayName1, logType, notEnabled, namespace, labels, s3Uri, region, accountNumber, queueName, sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
+				Config: testAccCheckChronicleFeedAmazonSQSV2(
+					displayName1, logType, notEnabled, namespace, labels, s3Uri, region, accountNumber, queueName,
+					sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
@@ -161,14 +171,18 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateMaxLookbackDays(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedAmazonSQSV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSV2(displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName, sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
+				Config: testAccCheckChronicleFeedAmazonSQSV2(
+					displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName,
+					sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays),
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAmazonSQSV2(displayName1, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName, sourceDeleteOptions, maxLookbackDays1, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
+				Config: testAccCheckChronicleFeedAmazonSQSV2(
+					displayName1, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName,
+					sourceDeleteOptions, maxLookbackDays1, sqsAccessKeyID, sqsSecretAccessKey, "", ""),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays1),
@@ -178,7 +192,6 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateMaxLookbackDays(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAmazonSQSV2(displayName, logType, enabled, namespace, labels, s3Uri, region, accountNumber, queueName,
 	sourceDeleteOptions, maxLookbackDays, sqsAccessKeyID, sqsSecretAccessKey, s3AccessKeyID, s3SecretAccessKey string) string {
 
@@ -246,7 +259,6 @@ func testAccCheckChronicleFeedAmazonSQSV2Destroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedAmazonSQSV2Ref(name string) string {
 	return fmt.Sprintf("chronicle_feed_amazon_sqs_v2.%v", name)
 }

@@ -18,9 +18,10 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 	details := &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"queue": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The Amazon Resource Name (ARN) of the SQS queue. Format: arn:aws:sqs:region:account_id:queue_name. Example: arn:aws:sqs:us-east-1:123456789012:my-queue`,
+				Type:     schema.TypeString,
+				Required: true,
+				Description: `The Amazon Resource Name (ARN) of the SQS queue. ` +
+					`Format: arn:aws:sqs:region:account_id:queue_name. Example: arn:aws:sqs:us-east-1:123456789012:my-queue`,
 			},
 			"s3_uri": {
 				Type:        schema.TypeString,
@@ -44,10 +45,11 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 				Description:      `The maximum number of days in the past to look for files. Must be between 1 and 180. Default is 180 days.`,
 			},
 			"authentication": {
-				Type:        schema.TypeList,
-				Required:    true,
-				MaxItems:    1,
-				Description: `AWS authentication details. Use either access key credentials or IAM role ARN. The same credentials are used for both SQS queue and S3 bucket.`,
+				Type:     schema.TypeList,
+				Required: true,
+				MaxItems: 1,
+				Description: `AWS authentication details. Use either access key credentials or IAM role ARN. ` +
+					`The same credentials are used for both SQS queue and S3 bucket.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"access_key_id": {
@@ -55,7 +57,8 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 							Optional:         true,
 							ValidateDiagFunc: validateAWSAccessKeyID,
 							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
-							Description:      `The 20-character access key ID for your Amazon IAM account. Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
+							Description: `The 20-character access key ID for your Amazon IAM account. ` +
+								`Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
 						},
 						"secret_access_key": {
 							Type:             schema.TypeString,
@@ -63,13 +66,15 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 							Sensitive:        true,
 							ValidateDiagFunc: validateAWSSecretAccessKey,
 							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
-							Description:      `The 40-character secret access key for your Amazon IAM account. Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
+							Description: `The 40-character secret access key for your Amazon IAM account. ` +
+								`Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
 						},
 						"aws_iam_role_arn": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"details.0.authentication.0.access_key_id", "details.0.authentication.0.secret_access_key"},
-							Description:   `ARN of the AWS IAM role configured to access both SQS queue and S3 bucket. Use this for federated authentication instead of access keys.`,
+							Description: `ARN of the AWS IAM role configured to access both SQS queue and S3 bucket. ` +
+								`Use this for federated authentication instead of access keys.`,
 						},
 					},
 				},

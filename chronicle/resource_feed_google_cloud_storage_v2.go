@@ -36,7 +36,9 @@ func NewResourceFeedGoogleCloudStorageV2() *ResourceFeedGoogleCloudStorageV2 {
 			},
 		},
 	}
-	description := "Creates a V2 feed from Google Cloud Storage. This feed type uses the Google Cloud Storage Transfer Service for improved ingestion. Authentication is handled via the Google Security Operations service account."
+	description := "Creates a V2 feed from Google Cloud Storage. " +
+		"This feed type uses the Google Cloud Storage Transfer Service for improved ingestion. " +
+		"Authentication is handled via the Google Security Operations service account."
 	resource := &ResourceFeedGoogleCloudStorageV2{}
 	resource.TerraformResource = newFeedResourceSchema(details, resource, description, true)
 

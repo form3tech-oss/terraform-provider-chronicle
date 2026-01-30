@@ -56,7 +56,7 @@ func TestAccChronicleFeedAzureBlobStoreV2_BasicWithSASToken(t *testing.T) {
 	azureUri := "myaccount.blob.core.windows.net/logs"
 	sourceDeleteOptions := "ON_SUCCESS"
 	maxLookbackDays := "90"
-	sasToken := "sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-01-01T00:00:00Z&st=2024-01-01T00:00:00Z&spr=https&sig=test"
+	sasToken := "sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-01-01T00:00:00Z&st=2024-01-01T00:00:00Z&spr=https&sig=test" // #nosec G101 - This is test data, not a real credential
 
 	rootRef := feedAzureBlobStoreV2Ref("test")
 	resource.Test(t, resource.TestCase{
@@ -171,7 +171,6 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateMaxLookbackDays(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType, enabled, namespace, labels, azureUri,
 	sourceDeleteOptions, maxLookbackDays, sharedKey string) string {
 	return fmt.Sprintf(
@@ -194,7 +193,6 @@ func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType
 		}`, displayName, logType, enabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays, sharedKey)
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAzureBlobStoreV2WithSASToken(displayName, logType, enabled, namespace, labels, azureUri,
 	sourceDeleteOptions, maxLookbackDays, sasToken string) string {
 	return fmt.Sprintf(
@@ -246,7 +244,6 @@ func testAccCheckChronicleFeedAzureBlobStoreV2Destroy(s *terraform.State) error 
 	return nil
 }
 
-//nolint:unparam
 func feedAzureBlobStoreV2Ref(name string) string {
 	return fmt.Sprintf("chronicle_feed_azure_blobstore_v2.%v", name)
 }

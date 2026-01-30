@@ -174,7 +174,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedGoogleCloudStorageEventDriven(displayName, logType, enabled, namespace, labels, bucketUri,
 	pubsubSubscription, sourceDeleteOptions, maxLookbackDays string) string {
 	return fmt.Sprintf(
@@ -224,7 +223,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageEventDrivenDestroy(s *terraform.
 	return nil
 }
 
-//nolint:unparam
 func feedGoogleCloudStorageEventDrivenRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_google_cloud_storage_event_driven.%v", name)
 }

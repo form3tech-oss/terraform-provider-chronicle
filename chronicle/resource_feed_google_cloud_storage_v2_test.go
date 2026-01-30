@@ -173,7 +173,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateMaxLookbackDays(t *testing.T
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, namespace, labels, bucketUri,
 	sourceDeleteOptions, maxLookbackDays string) string {
 	return fmt.Sprintf(
@@ -222,7 +221,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageV2Destroy(s *terraform.State) er
 	return nil
 }
 
-//nolint:unparam
 func feedGoogleCloudStorageV2Ref(name string) string {
 	return fmt.Sprintf("chronicle_feed_google_cloud_storage_v2.%v", name)
 }
