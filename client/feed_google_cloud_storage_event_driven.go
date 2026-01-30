@@ -5,10 +5,10 @@ const (
 )
 
 type GCSEventDrivenFeedConfiguration struct {
-	BucketURI            string `json:"bucketUri,omitempty"`
-	PubsubSubscription   string `json:"pubsubSubscription,omitempty"`
-	SourceDeleteOptions  string `json:"sourceDeletionOption,omitempty"`
-	MaxLookbackDays      int    `json:"maxLookbackDays,omitempty"`
+	BucketURI           string `json:"bucketUri,omitempty"`
+	PubsubSubscription  string `json:"pubsubSubscription,omitempty"`
+	SourceDeleteOptions string `json:"sourceDeletionOption,omitempty"`
+	MaxLookbackDays     int    `json:"maxLookbackDays,omitempty"`
 }
 
 func (g *GCSEventDrivenFeedConfiguration) getConfigurationPropertyKey() string {
