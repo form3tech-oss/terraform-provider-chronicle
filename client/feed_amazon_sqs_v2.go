@@ -1,27 +1,25 @@
 package client
 
 const (
-	sqsV2FeedConfigurationPropertyKey = "amazonSqsV2Settings"
+	sqsV2FeedConfigurationPropertyKey = "amazon_sqs_v2_settings"
 )
 
 type SQSV2FeedConfiguration struct {
+	Queue               string                  `json:"queue,omitempty"`
 	S3URI               string                  `json:"s3Uri,omitempty"`
-	Region              string                  `json:"region,omitempty"`
-	AccountNumber       string                  `json:"accountNumber,omitempty"`
-	QueueName           string                  `json:"queueName,omitempty"`
 	SourceDeleteOptions string                  `json:"sourceDeletionOption,omitempty"`
 	MaxLookbackDays     int                     `json:"maxLookbackDays,omitempty"`
 	Authentication      SQSV2FeedAuthentication `json:"authentication,omitempty"`
 }
 
 type SQSV2FeedAuthentication struct {
-	SQSAuthentication SQSV2FeedAuthenticationCred  `json:"sqsAccessKeySecretAuth,omitempty"`
-	S3Authentication  *SQSV2FeedAuthenticationCred `json:"additionalS3AccessKeySecretAuth,omitempty"`
+	AccessKeySecretAuth *SQSV2AccessKeySecretAuth `json:"access_key_secret_auth,omitempty"`
+	AWSIAMRoleArn       string                    `json:"aws_iam_role_arn,omitempty"`
 }
 
-type SQSV2FeedAuthenticationCred struct {
-	AccessKeyID     string `json:"accessKeyId"`
-	SecretAccessKey string `json:"secretAccessKey"`
+type SQSV2AccessKeySecretAuth struct {
+	AccessKeyID     string `json:"accessKeyId,omitempty"`
+	SecretAccessKey string `json:"secretAccessKey,omitempty"`
 }
 
 func (s *SQSV2FeedConfiguration) getConfigurationPropertyKey() string {

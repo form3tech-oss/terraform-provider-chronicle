@@ -17,26 +17,15 @@ type ResourceFeedAmazonSQSV2 struct {
 func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 	details := &schema.Resource{
 		Schema: map[string]*schema.Schema{
+			"queue": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `The Amazon Resource Name (ARN) of the SQS queue. Format: arn:aws:sqs:region:account_id:queue_name. Example: arn:aws:sqs:us-east-1:123456789012:my-queue`,
+			},
 			"s3_uri": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: `The S3 bucket URI in the format s3://bucket-name/path/.`,
-			},
-			"region": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The AWS region where the SQS queue and S3 bucket reside.`,
-			},
-			"account_number": {
-				Type:             schema.TypeString,
-				ValidateDiagFunc: validateAWSAccountID,
-				Required:         true,
-				Description:      `The AWS account number for the SQS queue and S3 bucket.`,
-			},
-			"queue_name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: `The SQS queue name.`,
 			},
 			"source_delete_options": {
 				Type:             schema.TypeString,
@@ -58,44 +47,29 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: `AWS authentication details.`,
+				Description: `AWS authentication details. Use either access key credentials or IAM role ARN. The same credentials are used for both SQS queue and S3 bucket.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"sqs_access_key_id": {
+						"access_key_id": {
 							Type:             schema.TypeString,
-							Required:         true,
+							Optional:         true,
 							ValidateDiagFunc: validateAWSAccessKeyID,
-							Description:      `The 20-character access key ID for the SQS queue.`,
+							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
+							Description:      `The 20-character access key ID for your Amazon IAM account. Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
 						},
-						"sqs_secret_access_key": {
+						"secret_access_key": {
 							Type:             schema.TypeString,
-							Required:         true,
+							Optional:         true,
 							Sensitive:        true,
 							ValidateDiagFunc: validateAWSSecretAccessKey,
-							Description:      `The 40-character secret access key for the SQS queue.`,
+							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
+							Description:      `The 40-character secret access key for your Amazon IAM account. Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
 						},
-						"s3_authentication": {
-							Type:        schema.TypeList,
-							Optional:    true,
-							MaxItems:    1,
-							Description: `S3 authentication details. Only specify if using a different access key for the S3 bucket.`,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"access_key_id": {
-										Type:             schema.TypeString,
-										Required:         true,
-										ValidateDiagFunc: validateAWSAccessKeyID,
-										Description:      `The 20-character access key ID for the S3 bucket.`,
-									},
-									"secret_access_key": {
-										Type:             schema.TypeString,
-										Required:         true,
-										Sensitive:        true,
-										ValidateDiagFunc: validateAWSSecretAccessKey,
-										Description:      `The 40-character secret access key for the S3 bucket.`,
-									},
-								},
-							},
+						"aws_iam_role_arn": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							ConflictsWith: []string{"details.0.authentication.0.access_key_id", "details.0.authentication.0.secret_access_key"},
+							Description:   `ARN of the AWS IAM role configured to access both SQS queue and S3 bucket. Use this for federated authentication instead of access keys.`,
 						},
 					},
 				},
@@ -121,32 +95,26 @@ func (f *ResourceFeedAmazonSQSV2) expandConcreteFeedConfiguration(d *schema.Reso
 
 	resourceDetails := resourceDetailsInterface[0].(map[string]interface{})
 	authenticationDetails := resourceDetails["authentication"].([]interface{})[0].(map[string]interface{})
-	authenticationS3DetailsInterface := authenticationDetails["s3_authentication"].([]interface{})
 
-	sqsConfiguration := &chronicle.SQSV2FeedConfiguration{
+	config := &chronicle.SQSV2FeedConfiguration{
+		Queue:               resourceDetails["queue"].(string),
 		S3URI:               resourceDetails["s3_uri"].(string),
-		Region:              resourceDetails["region"].(string),
-		AccountNumber:       resourceDetails["account_number"].(string),
-		QueueName:           resourceDetails["queue_name"].(string),
 		SourceDeleteOptions: resourceDetails["source_delete_options"].(string),
 		MaxLookbackDays:     resourceDetails["max_lookback_days"].(int),
-		Authentication: chronicle.SQSV2FeedAuthentication{
-			SQSAuthentication: chronicle.SQSV2FeedAuthenticationCred{
-				AccessKeyID:     authenticationDetails["sqs_access_key_id"].(string),
-				SecretAccessKey: authenticationDetails["sqs_secret_access_key"].(string),
-			},
-		},
+		Authentication:      chronicle.SQSV2FeedAuthentication{},
 	}
 
-	if len(authenticationS3DetailsInterface) > 0 {
-		authenticationS3Details := authenticationS3DetailsInterface[0].(map[string]interface{})
-		sqsConfiguration.Authentication.S3Authentication = &chronicle.SQSV2FeedAuthenticationCred{
-			AccessKeyID:     authenticationS3Details["access_key_id"].(string),
-			SecretAccessKey: authenticationS3Details["secret_access_key"].(string),
+	// Check which authentication method is used
+	if iamRoleArn, ok := authenticationDetails["aws_iam_role_arn"].(string); ok && iamRoleArn != "" {
+		config.Authentication.AWSIAMRoleArn = iamRoleArn
+	} else {
+		config.Authentication.AccessKeySecretAuth = &chronicle.SQSV2AccessKeySecretAuth{
+			AccessKeyID:     authenticationDetails["access_key_id"].(string),
+			SecretAccessKey: authenticationDetails["secret_access_key"].(string),
 		}
 	}
 
-	return sqsConfiguration
+	return config
 }
 
 //nolint:all
@@ -156,51 +124,41 @@ func (f *ResourceFeedAmazonSQSV2) flattenDetailsFromReadOperation(originalConf c
 
 	// Import Case
 	if originalConf == nil {
-		conf := []map[string]interface{}{{
-			"s3_uri":                readSQSConf.S3URI,
-			"region":                readSQSConf.Region,
-			"account_number":        readSQSConf.AccountNumber,
-			"queue_name":            readSQSConf.QueueName,
-			"source_delete_options": readSQSConf.SourceDeleteOptions,
-			"max_lookback_days":     readSQSConf.MaxLookbackDays,
-			"authentication": []map[string]interface{}{{
-				"sqs_access_key_id":     readSQSConf.Authentication.SQSAuthentication.AccessKeyID,
-				"sqs_secret_access_key": readSQSConf.Authentication.SQSAuthentication.SecretAccessKey,
-			}},
-		}}
-
-		if readSQSConf.Authentication.S3Authentication != nil {
-			conf[0]["authentication"].([]map[string]interface{})[0]["s3_authentication"] = []map[string]interface{}{{
-				"access_key_id":     readSQSConf.Authentication.S3Authentication.AccessKeyID,
-				"secret_access_key": readSQSConf.Authentication.S3Authentication.SecretAccessKey,
-			}}
+		authMap := make(map[string]interface{})
+		if readSQSConf.Authentication.AWSIAMRoleArn != "" {
+			authMap["aws_iam_role_arn"] = readSQSConf.Authentication.AWSIAMRoleArn
+		}
+		if readSQSConf.Authentication.AccessKeySecretAuth != nil {
+			authMap["access_key_id"] = readSQSConf.Authentication.AccessKeySecretAuth.AccessKeyID
+			authMap["secret_access_key"] = readSQSConf.Authentication.AccessKeySecretAuth.SecretAccessKey
 		}
 
-		return conf
+		return []map[string]interface{}{{
+			"queue":                 readSQSConf.Queue,
+			"s3_uri":                readSQSConf.S3URI,
+			"source_delete_options": readSQSConf.SourceDeleteOptions,
+			"max_lookback_days":     readSQSConf.MaxLookbackDays,
+			"authentication":        []map[string]interface{}{authMap},
+		}}
 	}
 
 	originalSQSConf := originalConf.(*chronicle.SQSV2FeedConfiguration)
 	// Default Case
-	conf := []map[string]interface{}{{
+	authMap := make(map[string]interface{})
+	if originalSQSConf.Authentication.AWSIAMRoleArn != "" {
+		authMap["aws_iam_role_arn"] = originalSQSConf.Authentication.AWSIAMRoleArn
+	}
+	if originalSQSConf.Authentication.AccessKeySecretAuth != nil {
+		authMap["access_key_id"] = originalSQSConf.Authentication.AccessKeySecretAuth.AccessKeyID
+		authMap["secret_access_key"] = originalSQSConf.Authentication.AccessKeySecretAuth.SecretAccessKey
+	}
+
+	return []map[string]interface{}{{
+		"queue":                 readSQSConf.Queue,
 		"s3_uri":                readSQSConf.S3URI,
-		"region":                readSQSConf.Region,
-		"account_number":        readSQSConf.AccountNumber,
-		"queue_name":            readSQSConf.QueueName,
 		"source_delete_options": originalSQSConf.SourceDeleteOptions, // not returned
 		"max_lookback_days":     readSQSConf.MaxLookbackDays,
 		// replace authentication block with original values because they are not returned within a read request
-		"authentication": []map[string]interface{}{{
-			"sqs_access_key_id":     originalSQSConf.Authentication.SQSAuthentication.AccessKeyID,
-			"sqs_secret_access_key": originalSQSConf.Authentication.SQSAuthentication.SecretAccessKey,
-		}},
+		"authentication": []map[string]interface{}{authMap},
 	}}
-
-	if originalSQSConf.Authentication.S3Authentication != nil {
-		conf[0]["authentication"].([]map[string]interface{})[0]["s3_authentication"] = []map[string]interface{}{{
-			"access_key_id":     originalSQSConf.Authentication.S3Authentication.AccessKeyID,
-			"secret_access_key": originalSQSConf.Authentication.S3Authentication.SecretAccessKey,
-		}}
-	}
-
-	return conf
 }

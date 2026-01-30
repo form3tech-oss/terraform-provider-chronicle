@@ -12,7 +12,11 @@ type S3V2FeedConfiguration struct {
 }
 
 type S3V2FeedAuthentication struct {
-	Region          string `json:"region,omitempty"`
+	AccessKeySecretAuth *S3V2AccessKeySecretAuth `json:"access_key_secret_auth,omitempty"`
+	AWSIAMRoleArn       string                   `json:"aws_iam_role_arn,omitempty"`
+}
+
+type S3V2AccessKeySecretAuth struct {
 	AccessKeyID     string `json:"accessKeyId,omitempty"`
 	SecretAccessKey string `json:"secretAccessKey,omitempty"`
 }

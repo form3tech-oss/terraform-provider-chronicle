@@ -19,12 +19,32 @@ resource "chronicle_feed_amazon_s3_v2" "example" {
     s3_uri = "s3://my-security-logs/cloudtrail/"
 
     source_delete_options = "ON_SUCCESS"  # or "NEVER"
-    max_lookback_days     = 180            # Default: 180
+    max_lookback_days     = 180            # Default: 180, Max: 180
 
+    # Authentication using access keys
     authentication {
-      region            = "us-east-1"
       access_key_id     = var.aws_access_key_id
       secret_access_key = var.aws_secret_access_key
+    }
+  }
+}
+
+# Example using IAM role ARN (Federated authentication)
+resource "chronicle_feed_amazon_s3_v2" "example_iam" {
+  display_name = "AWS S3 V2 Feed with IAM Role"
+  log_type     = "AWS_CLOUDTRAIL"
+  enabled      = true
+  namespace    = "aws-prod"
+
+  details {
+    s3_uri = "s3://my-security-logs/cloudtrail/"
+
+    source_delete_options = "ON_SUCCESS"
+    max_lookback_days     = 90
+
+    # Authentication using IAM role (recommended for federated access)
+    authentication {
+      aws_iam_role_arn = "arn:aws:iam::123456789012:role/chronicle-ingestion-role"
     }
   }
 }

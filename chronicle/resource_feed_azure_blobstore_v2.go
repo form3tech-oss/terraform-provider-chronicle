@@ -37,22 +37,43 @@ func NewResourceFeedAzureBlobStoreV2() *ResourceFeedAzureBlobStoreV2 {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: `Azure authentication details. Specify either shared_key or sas_token, but not both.`,
+				Description: `Azure authentication details. Specify one of: shared_key, sas_token, or workload_identity_federation.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"shared_key": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							Sensitive:     true,
-							ConflictsWith: []string{"details.0.authentication.0.sas_token"},
+							ConflictsWith: []string{"details.0.authentication.0.sas_token", "details.0.authentication.0.workload_identity_federation"},
 							Description:   `The shared access key for the Azure Blob Storage account.`,
 						},
 						"sas_token": {
 							Type:          schema.TypeString,
 							Optional:      true,
 							Sensitive:     true,
-							ConflictsWith: []string{"details.0.authentication.0.shared_key"},
+							ConflictsWith: []string{"details.0.authentication.0.shared_key", "details.0.authentication.0.workload_identity_federation"},
 							Description:   `The SAS (Shared Access Signature) token for the Azure Blob Storage account.`,
+						},
+						"workload_identity_federation": {
+							Type:          schema.TypeList,
+							Optional:      true,
+							MaxItems:      1,
+							ConflictsWith: []string{"details.0.authentication.0.shared_key", "details.0.authentication.0.sas_token"},
+							Description:   `Azure Workload Identity Federation details for authentication.`,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"client_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Application (client) ID of the registered Azure application.`,
+									},
+									"tenant_id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: `Directory (tenant) ID of the registered Azure application.`,
+									},
+								},
+							},
 						},
 					},
 				},
@@ -87,11 +108,19 @@ func (f *ResourceFeedAzureBlobStoreV2) expandConcreteFeedConfiguration(d *schema
 	}
 
 	if sharedKey, ok := authenticationDetails["shared_key"].(string); ok && sharedKey != "" {
-		configuration.Authentication.SharedKey = sharedKey
+		configuration.Authentication.AccessKey = sharedKey
 	}
 
 	if sasToken, ok := authenticationDetails["sas_token"].(string); ok && sasToken != "" {
 		configuration.Authentication.SASToken = sasToken
+	}
+
+	if fedIdentityInterface, ok := authenticationDetails["workload_identity_federation"].([]interface{}); ok && len(fedIdentityInterface) > 0 {
+		fedIdentity := fedIdentityInterface[0].(map[string]interface{})
+		configuration.Authentication.AzureV2WorkloadIdentityFederation = &chronicle.AzureV2WorkloadIdentityFederation{
+			ClientID: fedIdentity["client_id"].(string),
+			TenantID: fedIdentity["tenant_id"].(string),
+		}
 	}
 
 	return configuration
@@ -105,11 +134,17 @@ func (f *ResourceFeedAzureBlobStoreV2) flattenDetailsFromReadOperation(originalC
 	// Import Case
 	if originalConf == nil {
 		authMap := make(map[string]interface{})
-		if readAzureConf.Authentication.SharedKey != "" {
-			authMap["shared_key"] = readAzureConf.Authentication.SharedKey
+		if readAzureConf.Authentication.AccessKey != "" {
+			authMap["shared_key"] = readAzureConf.Authentication.AccessKey
 		}
 		if readAzureConf.Authentication.SASToken != "" {
 			authMap["sas_token"] = readAzureConf.Authentication.SASToken
+		}
+		if readAzureConf.Authentication.AzureV2WorkloadIdentityFederation != nil {
+			authMap["workload_identity_federation"] = []map[string]interface{}{{
+				"client_id": readAzureConf.Authentication.AzureV2WorkloadIdentityFederation.ClientID,
+				"tenant_id": readAzureConf.Authentication.AzureV2WorkloadIdentityFederation.TenantID,
+			}}
 		}
 
 		return []map[string]interface{}{{
@@ -123,11 +158,17 @@ func (f *ResourceFeedAzureBlobStoreV2) flattenDetailsFromReadOperation(originalC
 	originalAzureConf := originalConf.(*chronicle.AzureBlobStoreV2FeedConfiguration)
 	// Default Case
 	authMap := make(map[string]interface{})
-	if originalAzureConf.Authentication.SharedKey != "" {
-		authMap["shared_key"] = originalAzureConf.Authentication.SharedKey
+	if originalAzureConf.Authentication.AccessKey != "" {
+		authMap["shared_key"] = originalAzureConf.Authentication.AccessKey
 	}
 	if originalAzureConf.Authentication.SASToken != "" {
 		authMap["sas_token"] = originalAzureConf.Authentication.SASToken
+	}
+	if originalAzureConf.Authentication.AzureV2WorkloadIdentityFederation != nil {
+		authMap["workload_identity_federation"] = []map[string]interface{}{{
+			"client_id": originalAzureConf.Authentication.AzureV2WorkloadIdentityFederation.ClientID,
+			"tenant_id": originalAzureConf.Authentication.AzureV2WorkloadIdentityFederation.TenantID,
+		}}
 	}
 
 	return []map[string]interface{}{{

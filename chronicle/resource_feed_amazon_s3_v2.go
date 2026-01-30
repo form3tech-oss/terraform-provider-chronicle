@@ -37,26 +37,29 @@ func NewResourceFeedAmazonS3V2() *ResourceFeedAmazonS3V2 {
 				Type:        schema.TypeList,
 				Required:    true,
 				MaxItems:    1,
-				Description: `AWS authentication details.`,
+				Description: `AWS authentication details. Use either access key credentials or IAM role ARN.`,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"region": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: `The AWS region where the S3 bucket resides.`,
-						},
 						"access_key_id": {
 							Type:             schema.TypeString,
-							Required:         true,
+							Optional:         true,
 							ValidateDiagFunc: validateAWSAccessKeyID,
-							Description:      `The 20-character access key ID associated with your Amazon IAM account.`,
+							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
+							Description:      `The 20-character access key ID associated with your Amazon IAM account. Required if not using aws_iam_role_arn.`,
 						},
 						"secret_access_key": {
 							Type:             schema.TypeString,
-							Required:         true,
+							Optional:         true,
 							Sensitive:        true,
 							ValidateDiagFunc: validateAWSSecretAccessKey,
-							Description:      `The 40-character secret access key associated with your Amazon IAM account.`,
+							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
+							Description:      `The 40-character secret access key associated with your Amazon IAM account. Required if not using aws_iam_role_arn.`,
+						},
+						"aws_iam_role_arn": {
+							Type:          schema.TypeString,
+							Optional:      true,
+							ConflictsWith: []string{"details.0.authentication.0.access_key_id", "details.0.authentication.0.secret_access_key"},
+							Description:   `ARN of the AWS IAM role configured to access S3 bucket. Use this for federated authentication instead of access keys.`,
 						},
 					},
 				},
@@ -83,16 +86,24 @@ func (f *ResourceFeedAmazonS3V2) expandConcreteFeedConfiguration(d *schema.Resou
 	resourceDetails := resourceDetailsInterface[0].(map[string]interface{})
 	authenticationDetails := resourceDetails["authentication"].([]interface{})[0].(map[string]interface{})
 
-	return &chronicle.S3V2FeedConfiguration{
+	config := &chronicle.S3V2FeedConfiguration{
 		S3URI:               resourceDetails["s3_uri"].(string),
 		SourceDeleteOptions: resourceDetails["source_delete_options"].(string),
 		MaxLookbackDays:     resourceDetails["max_lookback_days"].(int),
-		Authentication: chronicle.S3V2FeedAuthentication{
-			Region:          authenticationDetails["region"].(string),
+		Authentication:      chronicle.S3V2FeedAuthentication{},
+	}
+
+	// Check which authentication method is used
+	if iamRoleArn, ok := authenticationDetails["aws_iam_role_arn"].(string); ok && iamRoleArn != "" {
+		config.Authentication.AWSIAMRoleArn = iamRoleArn
+	} else {
+		config.Authentication.AccessKeySecretAuth = &chronicle.S3V2AccessKeySecretAuth{
 			AccessKeyID:     authenticationDetails["access_key_id"].(string),
 			SecretAccessKey: authenticationDetails["secret_access_key"].(string),
-		},
+		}
 	}
+
+	return config
 }
 
 //nolint:all
@@ -102,29 +113,39 @@ func (f *ResourceFeedAmazonS3V2) flattenDetailsFromReadOperation(originalConf ch
 
 	// Import Case
 	if originalConf == nil {
+		authMap := make(map[string]interface{})
+		if readS3Conf.Authentication.AWSIAMRoleArn != "" {
+			authMap["aws_iam_role_arn"] = readS3Conf.Authentication.AWSIAMRoleArn
+		}
+		if readS3Conf.Authentication.AccessKeySecretAuth != nil {
+			authMap["access_key_id"] = readS3Conf.Authentication.AccessKeySecretAuth.AccessKeyID
+			authMap["secret_access_key"] = readS3Conf.Authentication.AccessKeySecretAuth.SecretAccessKey
+		}
+
 		return []map[string]interface{}{{
 			"s3_uri":                readS3Conf.S3URI,
 			"source_delete_options": readS3Conf.SourceDeleteOptions,
 			"max_lookback_days":     readS3Conf.MaxLookbackDays,
-			"authentication": []map[string]interface{}{{
-				"region":            readS3Conf.Authentication.Region,
-				"access_key_id":     readS3Conf.Authentication.AccessKeyID,
-				"secret_access_key": readS3Conf.Authentication.SecretAccessKey,
-			}},
+			"authentication":        []map[string]interface{}{authMap},
 		}}
 	}
 
 	originalS3Conf := originalConf.(*chronicle.S3V2FeedConfiguration)
 	// Default Case
+	authMap := make(map[string]interface{})
+	if originalS3Conf.Authentication.AWSIAMRoleArn != "" {
+		authMap["aws_iam_role_arn"] = originalS3Conf.Authentication.AWSIAMRoleArn
+	}
+	if originalS3Conf.Authentication.AccessKeySecretAuth != nil {
+		authMap["access_key_id"] = originalS3Conf.Authentication.AccessKeySecretAuth.AccessKeyID
+		authMap["secret_access_key"] = originalS3Conf.Authentication.AccessKeySecretAuth.SecretAccessKey
+	}
+
 	return []map[string]interface{}{{
 		"s3_uri":                readS3Conf.S3URI,
 		"source_delete_options": originalS3Conf.SourceDeleteOptions, // not returned
 		"max_lookback_days":     readS3Conf.MaxLookbackDays,
 		// replace authentication block with original values because they are not returned within a read request
-		"authentication": []map[string]interface{}{{
-			"region":            originalS3Conf.Authentication.Region,
-			"access_key_id":     originalS3Conf.Authentication.AccessKeyID,
-			"secret_access_key": originalS3Conf.Authentication.SecretAccessKey,
-		}},
+		"authentication": []map[string]interface{}{authMap},
 	}}
 }

@@ -20,11 +20,11 @@ resource "chronicle_feed_azure_blobstore_v2" "example_shared_key" {
     azure_uri = "https://myaccount.blob.core.windows.net/logs/"
 
     source_delete_options = "ON_SUCCESS"  # or "NEVER"
-    max_lookback_days     = 180            # Default: 180
+    max_lookback_days     = 180            # Default: 180, Max: 180
 
     authentication {
       shared_key = var.azure_shared_key
-      # Note: Use either shared_key OR sas_token, not both
+      # Note: Use one of: shared_key, sas_token, or workload_identity_federation
     }
   }
 }
@@ -45,7 +45,31 @@ resource "chronicle_feed_azure_blobstore_v2" "example_sas_token" {
 
     authentication {
       sas_token = var.azure_sas_token
-      # Note: Use either shared_key OR sas_token, not both
+      # Note: Use one of: shared_key, sas_token, or workload_identity_federation
+    }
+  }
+}
+
+# Example 3: Using Workload Identity Federation (recommended for production)
+resource "chronicle_feed_azure_blobstore_v2" "example_federated" {
+  display_name = "Azure Blob Storage V2 Feed - Federated Identity"
+  log_type     = "AZURE_AD"
+  enabled      = true
+
+  namespace = "azure-prod"
+
+  details {
+    azure_uri = "https://myaccount.blob.core.windows.net/logs/"
+
+    source_delete_options = "ON_SUCCESS"
+    max_lookback_days     = 180
+
+    authentication {
+      workload_identity_federation {
+        client_id = var.azure_client_id
+        tenant_id = var.azure_tenant_id
+      }
+      # Note: Use one of: shared_key, sas_token, or workload_identity_federation
     }
   }
 }
@@ -61,4 +85,16 @@ variable "azure_sas_token" {
   description = "Azure Storage SAS (Shared Access Signature) token"
   type        = string
   sensitive   = true
+}
+
+variable "azure_client_id" {
+  description = "Application (client) ID of the registered Azure application"
+  type        = string
+  sensitive   = false  # Client ID is not sensitive, but can be marked sensitive if desired
+}
+
+variable "azure_tenant_id" {
+  description = "Directory (tenant) ID of the registered Azure application"
+  type        = string
+  sensitive   = false  # Tenant ID is not sensitive, but can be marked sensitive if desired
 }

@@ -12,8 +12,14 @@ type AzureBlobStoreV2FeedConfiguration struct {
 }
 
 type AzureBlobStoreV2FeedFeedAuthentication struct {
-	SharedKey string `json:"sharedKey,omitempty"`
-	SASToken  string `json:"sasToken,omitempty"`
+	AccessKey                             string                                             `json:"accessKey,omitempty"`
+	SASToken                              string                                             `json:"sasToken,omitempty"`
+	AzureV2WorkloadIdentityFederation     *AzureV2WorkloadIdentityFederation                 `json:"azure_v2_workload_identity_federation,omitempty"`
+}
+
+type AzureV2WorkloadIdentityFederation struct {
+	ClientID string `json:"clientID,omitempty"`
+	TenantID string `json:"tenantID,omitempty"`
 }
 
 func (a *AzureBlobStoreV2FeedConfiguration) getConfigurationPropertyKey() string {
