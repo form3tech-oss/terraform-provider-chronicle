@@ -12,7 +12,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_Basic(t *testing.T) {
 	displayName := "test" + randString(10)
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "NEVER"
@@ -30,7 +29,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_Basic(t *testing.T) {
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 					resource.TestCheckResourceAttr(rootRef, "details.0.source_delete_options", sourceDeleteOptions),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays),
 				),
@@ -51,7 +49,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateEnabled(t *testing.T) {
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
 	notEnabled := "false"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "NEVER"
@@ -69,7 +66,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateEnabled(t *testing.T) {
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 				),
 			},
 			{
@@ -78,7 +74,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateEnabled(t *testing.T) {
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 				),
 			},
 			{
@@ -97,7 +92,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateLogType(t *testing.T) {
 	logType := "GCP_CLOUDAUDIT"
 	logType1 := "GCP_DNS"
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "ON_SUCCESS"
@@ -115,7 +109,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateLogType(t *testing.T) {
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 				),
 			},
 			{
@@ -124,7 +117,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateLogType(t *testing.T) {
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType1),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 				),
 			},
 			{
@@ -179,7 +171,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled
 			display_name = "%s"
 			log_type = "%s"
 			enabled = %s
-			namespace = "test"
 			labels = {
 				"test" = "test"
 			}
