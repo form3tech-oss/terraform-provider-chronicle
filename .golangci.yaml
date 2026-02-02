@@ -60,3 +60,4 @@ issues:
       linters:
         - stylecheck
         - unused
+        - unparam
