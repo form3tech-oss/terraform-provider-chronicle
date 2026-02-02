@@ -190,7 +190,6 @@ func TestAccChronicleOktaUsers_UpdateHostname(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedOktaUsersAuthUpdated(t *testing.T, n, key, value string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -212,7 +211,6 @@ func testAccCheckChronicleFeedOktaUsersAuthUpdated(t *testing.T, n, key, value s
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedOktaUsers(displayName, enabled, namespace, labels, hostname, managerID, key, value string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_okta_users" "test" {
@@ -262,7 +260,6 @@ func testAccCheckChronicleFeedOktaUsersDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedOktaUsersRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_okta_users.%v", name)
 }
