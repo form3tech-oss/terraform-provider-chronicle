@@ -19,7 +19,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_Basic(t *testing.T) {
 	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
 
-	rootRef := feedGoogleCloudStorageEventDrivenRef("test")
+	rootRef := feedGoogleCloudStorageEventDrivenRef()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -27,7 +27,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, logType, enabled, namespace, labels, bucketUri,
+					displayName, enabled, namespace, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -62,7 +62,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateEnabled(t *testing.
 	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
 
-	rootRef := feedGoogleCloudStorageEventDrivenRef("test")
+	rootRef := feedGoogleCloudStorageEventDrivenRef()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -70,7 +70,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateEnabled(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, logType, enabled, namespace, labels, bucketUri,
+					displayName, enabled, namespace, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -81,7 +81,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateEnabled(t *testing.
 			},
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName1, logType, notEnabled, namespace, labels, bucketUri,
+					displayName1, notEnabled, namespace, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -113,7 +113,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 	sourceDeleteOptions := "ON_SUCCESS"
 	maxLookbackDays := "90"
 
-	rootRef := feedGoogleCloudStorageEventDrivenRef("test")
+	rootRef := feedGoogleCloudStorageEventDrivenRef()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -121,7 +121,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, logType, enabled, namespace, labels, bucketUri,
+					displayName, enabled, namespace, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -130,7 +130,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 			},
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName1, logType, enabled, namespace, labels, bucketUri,
+					displayName1, enabled, namespace, labels, bucketUri,
 					pubsubSubscription1, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -160,7 +160,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 	maxLookbackDays := "180"
 	maxLookbackDays1 := "90"
 
-	rootRef := feedGoogleCloudStorageEventDrivenRef("test")
+	rootRef := feedGoogleCloudStorageEventDrivenRef()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -168,7 +168,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, logType, enabled, namespace, labels, bucketUri,
+					displayName, enabled, namespace, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -177,7 +177,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 			},
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName1, logType, enabled, namespace, labels, bucketUri,
+					displayName1, enabled, namespace, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -188,12 +188,12 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 	})
 }
 
-func testAccCheckChronicleFeedGoogleCloudStorageEventDriven(displayName, logType, enabled, namespace, labels, bucketUri,
+func testAccCheckChronicleFeedGoogleCloudStorageEventDriven(displayName, enabled, namespace, labels, bucketUri,
 	pubsubSubscription, sourceDeleteOptions, maxLookbackDays string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_google_cloud_storage_event_driven" "test" {
 			display_name = "%s"
-			log_type = "%s"
+			log_type = "GCP_CLOUDAUDIT"
 			enabled = %s
 			namespace = "%s"
 			labels = {
@@ -205,7 +205,7 @@ func testAccCheckChronicleFeedGoogleCloudStorageEventDriven(displayName, logType
 				source_delete_options = "%s"
 				max_lookback_days = %s
 			}
-		}`, displayName, logType, enabled, namespace, labels, bucketUri, pubsubSubscription, sourceDeleteOptions, maxLookbackDays)
+		}`, displayName, enabled, namespace, labels, bucketUri, pubsubSubscription, sourceDeleteOptions, maxLookbackDays)
 }
 
 func testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(n string) resource.TestCheckFunc {
@@ -237,6 +237,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageEventDrivenDestroy(s *terraform.
 	return nil
 }
 
-func feedGoogleCloudStorageEventDrivenRef(name string) string {
-	return fmt.Sprintf("chronicle_feed_google_cloud_storage_event_driven.%v", name)
+func feedGoogleCloudStorageEventDrivenRef() string {
+	return "chronicle_feed_google_cloud_storage_event_driven.test"
 }

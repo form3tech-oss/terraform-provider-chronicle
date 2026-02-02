@@ -19,14 +19,14 @@ func TestAccChronicleFeedAzureBlobStoreV2_BasicWithSharedKey(t *testing.T) {
 	maxLookbackDays := "180"
 	sharedKey := "dGVzdHNoYXJlZGtleXRlc3RzaGFyZWRrZXk="
 
-	rootRef := feedAzureBlobStoreV2Ref("test")
+	rootRef := feedAzureBlobStoreV2Ref()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckChronicleFeedAzureBlobStoreV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType, enabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled, namespace, labels, azureUri, maxLookbackDays, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -59,7 +59,7 @@ func TestAccChronicleFeedAzureBlobStoreV2_BasicWithSASToken(t *testing.T) {
 	// #nosec G101 - This is test data, not a real credential
 	sasToken := "sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-01-01T00:00:00Z&st=2024-01-01T00:00:00Z&spr=https&sig=test"
 
-	rootRef := feedAzureBlobStoreV2Ref("test")
+	rootRef := feedAzureBlobStoreV2Ref()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
@@ -100,14 +100,14 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateEnabled(t *testing.T) {
 	maxLookbackDays := "180"
 	sharedKey := "dGVzdHNoYXJlZGtleXRlc3RzaGFyZWRrZXk="
 
-	rootRef := feedAzureBlobStoreV2Ref("test")
+	rootRef := feedAzureBlobStoreV2Ref()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckChronicleFeedAzureBlobStoreV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType, enabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled, namespace, labels, azureUri, maxLookbackDays, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -116,7 +116,7 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName1, logType, notEnabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName1, notEnabled, namespace, labels, azureUri, maxLookbackDays, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -148,21 +148,21 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateMaxLookbackDays(t *testing.T) {
 	maxLookbackDays1 := "90"
 	sharedKey := "dGVzdHNoYXJlZGtleXRlc3RzaGFyZWRrZXk="
 
-	rootRef := feedAzureBlobStoreV2Ref("test")
+	rootRef := feedAzureBlobStoreV2Ref()
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testAccProviders,
 		CheckDestroy: testAccCheckChronicleFeedAzureBlobStoreV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType, enabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled, namespace, labels, azureUri, maxLookbackDays, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays),
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName1, logType, enabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays1, sharedKey),
+				Config: testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName1, enabled, namespace, labels, azureUri, maxLookbackDays1, sharedKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAzureBlobStoreV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays1),
@@ -172,12 +172,12 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateMaxLookbackDays(t *testing.T) {
 	})
 }
 
-func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType, enabled, namespace, labels, azureUri,
-	sourceDeleteOptions, maxLookbackDays, sharedKey string) string {
+func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled, namespace, labels, azureUri,
+	maxLookbackDays, sharedKey string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_azure_blobstore_v2" "test" {
 			display_name = "%s"
-			log_type = "%s"
+			log_type = "AZURE_AD"
 			enabled = %s
 			namespace = "%s"
 			labels = {
@@ -185,13 +185,13 @@ func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, logType
 			}
 			details {
 				azure_uri = "https://%s/"
-				source_delete_options = "%s"
+				source_delete_options = "NEVER"
 				max_lookback_days = %s
 				authentication {
 					shared_key = "%s"
 				}
 			}
-		}`, displayName, logType, enabled, namespace, labels, azureUri, sourceDeleteOptions, maxLookbackDays, sharedKey)
+		}`, displayName, enabled, namespace, labels, azureUri, maxLookbackDays, sharedKey)
 }
 
 func testAccCheckChronicleFeedAzureBlobStoreV2WithSASToken(displayName, logType, enabled, namespace, labels, azureUri,
@@ -245,6 +245,6 @@ func testAccCheckChronicleFeedAzureBlobStoreV2Destroy(s *terraform.State) error 
 	return nil
 }
 
-func feedAzureBlobStoreV2Ref(name string) string {
-	return fmt.Sprintf("chronicle_feed_azure_blobstore_v2.%v", name)
+func feedAzureBlobStoreV2Ref() string {
+	return "chronicle_feed_azure_blobstore_v2.test"
 }
