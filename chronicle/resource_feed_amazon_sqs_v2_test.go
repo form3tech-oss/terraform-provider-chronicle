@@ -152,7 +152,6 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateEnabled(t *testing.T) {
 func TestAccChronicleFeedAmazonSQSV2_UpdateMaxLookbackDays(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
-	logType := "AWS_CLOUDTRAIL"
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
