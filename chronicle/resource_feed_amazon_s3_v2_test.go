@@ -219,7 +219,7 @@ func testAccCheckChronicleFeedAmazonS3V2AuthUpdated(n, accessKeyID, secretAccess
 	}
 }
 
-func testAccCheckChronicleFeedAmazonS3V2(displayName, enabled, labels, s3Uri,
+func testAccCheckChronicleFeedAmazonS3V2(displayName, enabled, s3Uri,
 	sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_amazon_s3_v2" "test" {
@@ -228,7 +228,7 @@ func testAccCheckChronicleFeedAmazonS3V2(displayName, enabled, labels, s3Uri,
 			enabled = %s
 			namespace = "test"
 			labels = {
-				%s
+				"test" = "test"
 			}
 			details {
 				s3_uri = "s3://%s/"
@@ -239,7 +239,7 @@ func testAccCheckChronicleFeedAmazonS3V2(displayName, enabled, labels, s3Uri,
 					secret_access_key = "%s"
 				}
 			}
-		}`, displayName, enabled, labels, s3Uri, sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey)
+		}`, displayName, enabled, s3Uri, sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey)
 }
 
 func testAccCheckChronicleFeedAmazonS3V2Exists(n string) resource.TestCheckFunc {

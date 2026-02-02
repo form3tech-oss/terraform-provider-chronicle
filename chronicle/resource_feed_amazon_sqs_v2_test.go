@@ -191,14 +191,14 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateMaxLookbackDays(t *testing.T) {
 	})
 }
 
-func testAccCheckChronicleFeedAmazonSQSV2(displayName, enabled, namespace, labels, s3Uri, queue,
+func testAccCheckChronicleFeedAmazonSQSV2(displayName, enabled, labels, s3Uri, queue,
 	sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_amazon_sqs_v2" "test" {
 			display_name = "%s"
 			log_type = "AWS_CLOUDTRAIL"
 			enabled = %s
-			namespace = "%s"
+			namespace = "test"
 			labels = {
 				%s
 			}
@@ -212,7 +212,7 @@ func testAccCheckChronicleFeedAmazonSQSV2(displayName, enabled, namespace, label
 					secret_access_key = "%s"
 				}
 			}
-		}`, displayName, enabled, namespace, labels, queue, s3Uri,
+		}`, displayName, enabled, labels, queue, s3Uri,
 		sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey)
 }
 

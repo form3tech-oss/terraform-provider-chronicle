@@ -172,7 +172,7 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateMaxLookbackDays(t *testing.T
 	})
 }
 
-func testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, labels, bucketUri,
+func testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, bucketUri,
 	sourceDeleteOptions, maxLookbackDays string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_google_cloud_storage_v2" "test" {
@@ -181,14 +181,14 @@ func testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled
 			enabled = %s
 			namespace = "test"
 			labels = {
-				%s
+				"test" = "test"
 			}
 			details {
 				bucket_uri = "gs://%s/"
 				source_delete_options = "%s"
 				max_lookback_days = %s
 			}
-		}`, displayName, logType, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays)
+		}`, displayName, logType, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays)
 }
 
 func testAccCheckChronicleFeedGoogleCloudStorageV2Exists(n string) resource.TestCheckFunc {

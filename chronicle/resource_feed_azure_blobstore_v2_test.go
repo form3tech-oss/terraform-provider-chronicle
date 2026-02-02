@@ -169,14 +169,14 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateMaxLookbackDays(t *testing.T) {
 	})
 }
 
-func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled, namespace, labels, azureUri,
+func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled, labels, azureUri,
 	maxLookbackDays, sharedKey string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_azure_blobstore_v2" "test" {
 			display_name = "%s"
 			log_type = "AZURE_AD"
 			enabled = %s
-			namespace = "%s"
+			namespace = "test"
 			labels = {
 				%s
 			}
@@ -188,7 +188,7 @@ func testAccCheckChronicleFeedAzureBlobStoreV2WithSharedKey(displayName, enabled
 					shared_key = "%s"
 				}
 			}
-		}`, displayName, enabled, namespace, labels, azureUri, maxLookbackDays, sharedKey)
+		}`, displayName, enabled, labels, azureUri, maxLookbackDays, sharedKey)
 }
 
 func testAccCheckChronicleFeedAzureBlobStoreV2WithSASToken(displayName, logType, enabled, namespace, labels, azureUri,
