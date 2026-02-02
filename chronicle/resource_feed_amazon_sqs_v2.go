@@ -5,11 +5,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const (
-	FeedV2SourceDeleteOptionNever     = "NEVER"
-	FeedV2SourceDeleteOptionOnSuccess = "ON_SUCCESS"
-)
-
 type ResourceFeedAmazonSQSV2 struct {
 	TerraformResource *schema.Resource
 }

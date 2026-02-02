@@ -16,6 +16,12 @@ import (
 	googleoauth "golang.org/x/oauth2/google"
 )
 
+// V2 Feed Constants - shared across all V2 feed types
+const (
+	FeedV2SourceDeleteOptionNever     = "NEVER"
+	FeedV2SourceDeleteOptionOnSuccess = "ON_SUCCESS"
+)
+
 func validateCredentials(v interface{}, k cty.Path) diag.Diagnostics {
 	creds := v.(string)
 
