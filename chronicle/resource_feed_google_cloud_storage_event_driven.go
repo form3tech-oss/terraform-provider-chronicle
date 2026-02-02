@@ -41,7 +41,9 @@ func NewResourceFeedGoogleCloudStorageEventDriven() *ResourceFeedGoogleCloudStor
 			},
 		},
 	}
-	description := "Creates an event-driven feed from Google Cloud Storage using Pub/Sub notifications. This feed type uses Google Cloud Storage Transfer Service with push-based ingestion for reduced latency. Authentication is handled via the Google Security Operations service account."
+	description := "Creates an event-driven feed from Google Cloud Storage using Pub/Sub notifications. " +
+		"This feed type uses Google Cloud Storage Transfer Service with push-based ingestion for reduced latency. " +
+		"Authentication is handled via the Google Security Operations service account."
 	resource := &ResourceFeedGoogleCloudStorageEventDriven{}
 	resource.TerraformResource = newFeedResourceSchema(details, resource, description, true)
 

@@ -56,7 +56,8 @@ func TestAccChronicleFeedAzureBlobStoreV2_BasicWithSASToken(t *testing.T) {
 	azureUri := "myaccount.blob.core.windows.net/logs"
 	sourceDeleteOptions := "ON_SUCCESS"
 	maxLookbackDays := "90"
-	sasToken := "sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-01-01T00:00:00Z&st=2024-01-01T00:00:00Z&spr=https&sig=test" // #nosec G101 - This is test data, not a real credential
+	// #nosec G101 - This is test data, not a real credential
+	sasToken := "sv=2021-06-08&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-01-01T00:00:00Z&st=2024-01-01T00:00:00Z&spr=https&sig=test"
 
 	rootRef := feedAzureBlobStoreV2Ref("test")
 	resource.Test(t, resource.TestCase{

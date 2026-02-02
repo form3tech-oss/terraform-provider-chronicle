@@ -28,7 +28,7 @@ func TestAccChronicleFeedAmazonS3V2_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName, logType, enabled, namespace, labels, s3Uri,
+					displayName, enabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
@@ -73,7 +73,7 @@ func TestAccChronicleFeedAmazonS3V2_UpdateAuth(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName, logType, enabled, namespace, labels, s3Uri,
+					displayName, enabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
@@ -84,14 +84,14 @@ func TestAccChronicleFeedAmazonS3V2_UpdateAuth(t *testing.T) {
 			},
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName1, logType, enabled, namespace, labels, s3Uri,
+					displayName1, enabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays, accessKeyID1, secretAccessKey1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
 					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
-					testAccCheckChronicleFeedAmazonS3V2AuthUpdated(t, rootRef, accessKeyID1, secretAccessKey1),
+					testAccCheckChronicleFeedAmazonS3V2AuthUpdated(rootRef, accessKeyID1, secretAccessKey1),
 				),
 			},
 			{
@@ -127,7 +127,7 @@ func TestAccChronicleFeedAmazonS3V2_UpdateEnabled(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName, logType, enabled, namespace, labels, s3Uri,
+					displayName, enabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
@@ -138,7 +138,7 @@ func TestAccChronicleFeedAmazonS3V2_UpdateEnabled(t *testing.T) {
 			},
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName1, logType, notEnabled, namespace, labels, s3Uri,
+					displayName1, notEnabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
@@ -161,7 +161,6 @@ func TestAccChronicleFeedAmazonS3V2_UpdateEnabled(t *testing.T) {
 func TestAccChronicleFeedAmazonS3V2_UpdateMaxLookbackDays(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
-	logType := "AWS_CLOUDTRAIL"
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -180,7 +179,7 @@ func TestAccChronicleFeedAmazonS3V2_UpdateMaxLookbackDays(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName, logType, enabled, namespace, labels, s3Uri,
+					displayName, enabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
@@ -189,7 +188,7 @@ func TestAccChronicleFeedAmazonS3V2_UpdateMaxLookbackDays(t *testing.T) {
 			},
 			{
 				Config: testAccCheckChronicleFeedAmazonS3V2(
-					displayName1, logType, enabled, namespace, labels, s3Uri,
+					displayName1, enabled, namespace, labels, s3Uri,
 					sourceDeleteOptions, maxLookbackDays1, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonS3V2Exists(rootRef),
@@ -200,7 +199,7 @@ func TestAccChronicleFeedAmazonS3V2_UpdateMaxLookbackDays(t *testing.T) {
 	})
 }
 
-func testAccCheckChronicleFeedAmazonS3V2AuthUpdated(t *testing.T, n, accessKeyID, secretAccessKey string) resource.TestCheckFunc {
+func testAccCheckChronicleFeedAmazonS3V2AuthUpdated(n, accessKeyID, secretAccessKey string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
 
@@ -221,12 +220,12 @@ func testAccCheckChronicleFeedAmazonS3V2AuthUpdated(t *testing.T, n, accessKeyID
 	}
 }
 
-func testAccCheckChronicleFeedAmazonS3V2(displayName, logType, enabled, namespace, labels, s3Uri,
+func testAccCheckChronicleFeedAmazonS3V2(displayName, enabled, namespace, labels, s3Uri,
 	sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_amazon_s3_v2" "test" {
 			display_name = "%s"
-			log_type = "%s"
+			log_type = "AWS_CLOUDTRAIL"
 			enabled = %s
 			namespace = "%s"
 			labels = {
@@ -241,7 +240,7 @@ func testAccCheckChronicleFeedAmazonS3V2(displayName, logType, enabled, namespac
 					secret_access_key = "%s"
 				}
 			}
-		}`, displayName, logType, enabled, namespace, labels, s3Uri, sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey)
+		}`, displayName, enabled, namespace, labels, s3Uri, sourceDeleteOptions, maxLookbackDays, accessKeyID, secretAccessKey)
 }
 
 func testAccCheckChronicleFeedAmazonS3V2Exists(n string) resource.TestCheckFunc {
