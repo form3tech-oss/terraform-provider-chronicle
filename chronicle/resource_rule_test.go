@@ -308,7 +308,6 @@ func testAccCheckChronicleRuleDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:all
 func rulePolicyRef(name string) string {
 	return fmt.Sprintf("chronicle_rule.%v", name)
 }

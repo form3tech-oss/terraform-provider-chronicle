@@ -186,7 +186,6 @@ func TestAccChronicleOktaSystemLog_UpdateHostname(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedOktaSystemLogAuthUpdated(t *testing.T, n, key, value string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -208,7 +207,6 @@ func testAccCheckChronicleFeedOktaSystemLogAuthUpdated(t *testing.T, n, key, val
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedOktaSystemLog(displayName, enabled, namespace, labels, hostname, key, value string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_okta_system_log" "test" {
@@ -245,7 +243,7 @@ func testAccCheckChronicleFeedOktaSystemLogExists(n string) resource.TestCheckFu
 
 func testAccCheckChronicleFeedOktaSystemLogDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_okta_system_log.test" {
+		if rs.Type != "chronicle_feed_okta_system_log" {
 			continue
 		}
 
@@ -257,7 +255,6 @@ func testAccCheckChronicleFeedOktaSystemLogDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedOktaSystemLogRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_okta_system_log.%v", name)
 }

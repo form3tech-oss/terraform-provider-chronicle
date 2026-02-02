@@ -190,7 +190,6 @@ func TestAccChronicleFeedAzureBlobStore_UpdateLogType(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAzureBlobStore(displayName, logType, enabled, namespace, labels, uri, sourceType, shared_key string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_azure_blobstore" "test" {
@@ -228,7 +227,7 @@ func testAccCheckChronicleFeedAzureBlobStoreExists(n string) resource.TestCheckF
 
 func testAccCheckChronicleFeedAzureBlobStoreDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_azure_blobstore.test" {
+		if rs.Type != "chronicle_feed_azure_blobstore" {
 			continue
 		}
 
@@ -240,7 +239,6 @@ func testAccCheckChronicleFeedAzureBlobStoreDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedAzureBlobStoreRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_azure_blobstore.%v", name)
 }

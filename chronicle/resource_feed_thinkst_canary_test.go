@@ -185,7 +185,6 @@ func TestAccChronicleThinkstCanary_UpdateHostname(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedThinkstCanaryAuthUpdated(t *testing.T, n, key, value string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -207,7 +206,6 @@ func testAccCheckChronicleFeedThinkstCanaryAuthUpdated(t *testing.T, n, key, val
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedThinkstCanary(displayName, enabled, namespace, labels, hostname, key, value string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_thinkst_canary" "test" {
@@ -244,7 +242,7 @@ func testAccCheckChronicleFeedThinkstCanaryExists(n string) resource.TestCheckFu
 
 func testAccCheckChronicleFeedThinkstCanaryDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_thinkst_canary.test" {
+		if rs.Type != "chronicle_feed_thinkst_canary" {
 			continue
 		}
 
@@ -256,7 +254,6 @@ func testAccCheckChronicleFeedThinkstCanaryDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedThinkstCanaryRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_thinkst_canary.%v", name)
 }

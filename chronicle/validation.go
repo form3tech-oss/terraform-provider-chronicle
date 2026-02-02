@@ -16,6 +16,12 @@ import (
 	googleoauth "golang.org/x/oauth2/google"
 )
 
+// V2 Feed Constants - shared across all V2 feed types.
+const (
+	FeedV2SourceDeleteOptionNever     = "NEVER"
+	FeedV2SourceDeleteOptionOnSuccess = "ON_SUCCESS"
+)
+
 func validateCredentials(v interface{}, k cty.Path) diag.Diagnostics {
 	creds := v.(string)
 
@@ -71,6 +77,24 @@ func validateFeedAzureBlobStoreSourceDeleteOption(v interface{}, k cty.Path) dia
 		return diag.FromErr(fmt.Errorf("source deletion option %s not valid, valid options are: %s", option, deletionOptions))
 	}
 
+	return nil
+}
+
+func validateFeedV2SourceDeleteOption(v interface{}, k cty.Path) diag.Diagnostics {
+	deletionOptions := []string{FeedV2SourceDeleteOptionNever, FeedV2SourceDeleteOptionOnSuccess}
+	option := v.(string)
+	if !contains(deletionOptions, option) {
+		return diag.FromErr(fmt.Errorf("source deletion option %s not valid, valid options are: %s", option, deletionOptions))
+	}
+
+	return nil
+}
+
+func validateMaxLookbackDays(v interface{}, k cty.Path) diag.Diagnostics {
+	days := v.(int)
+	if days < 1 || days > 180 {
+		return diag.FromErr(fmt.Errorf("max_lookback_days must be between 1 and 180, got %d", days))
+	}
 	return nil
 }
 

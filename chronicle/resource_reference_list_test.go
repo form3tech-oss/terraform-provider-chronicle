@@ -212,7 +212,6 @@ func testAccCheckChronicleReferenceListDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func referenceListRef(name string) string {
 	return fmt.Sprintf("chronicle_reference_list.%v", name)
 }

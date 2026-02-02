@@ -11,12 +11,17 @@ import (
 )
 
 const (
-	FeedSourceTypeAPI            = "API"
-	FeedSourceTypeAzureBlobStore = "AZURE_BLOBSTORE"
-	FeedSourceTypeGCS            = "GOOGLE_CLOUD_STORAGE"
-	FeedSourceTypeS3             = "AMAZON_S3"
-	FeedSourceTypeSQS            = "AMAZON_SQS"
-	FeedSourceTypeHTTP           = "HTTP"
+	FeedSourceTypeAPI              = "API"
+	FeedSourceTypeAzureBlobStore   = "AZURE_BLOBSTORE"
+	FeedSourceTypeAzureBlobStoreV2 = "AZURE_BLOBSTORE_V2"
+	FeedSourceTypeGCS              = "GOOGLE_CLOUD_STORAGE"
+	FeedSourceTypeGCSV2            = "GOOGLE_CLOUD_STORAGE_V2"
+	FeedSourceTypeGCSEventDriven   = "GOOGLE_CLOUD_STORAGE_EVENT_DRIVEN"
+	FeedSourceTypeS3               = "AMAZON_S3"
+	FeedSourceTypeS3V2             = "AMAZON_S3_V2"
+	FeedSourceTypeSQS              = "AMAZON_SQS"
+	FeedSourceTypeSQSV2            = "AMAZON_SQS_V2"
+	FeedSourceTypeHTTP             = "HTTP"
 )
 
 type ConcreteFeedConfiguration interface {
@@ -82,11 +87,7 @@ func newFeedAsMapFromConcreteFeed(name, displayName, logType, namespace string,
 
 func joinBaseFeedMapAndConcreteFeedMap(configurationPropertyKey string, baseFeedMap, concreteFeedMap map[string]interface{}) map[string]interface{} {
 	details := baseFeedMap["details"].(map[string]interface{})
-	var err error
-	details[configurationPropertyKey], err = toMapWithJSONTags(concreteFeedMap)
-	if err != nil {
-		return nil
-	}
+	details[configurationPropertyKey] = concreteFeedMap
 	baseFeedMap["details"] = details
 
 	return baseFeedMap
@@ -169,6 +170,10 @@ func (cli *Client) ReadFeed(name string) (*BaseFeed, *ConcreteFeedConfiguration,
 	feedSourceType := extractFeedSourceTypeFromDetails(details)
 	logType := extractLogTypeFromDetails(details)
 	concreteFeed := newConcreteFeedConfiguration(feedSourceType, logType)
+
+	if concreteFeed == nil {
+		return nil, nil, fmt.Errorf("unsupported feed source type: %s (log type: %s)", feedSourceType, logType)
+	}
 
 	var baseFeed *BaseFeed
 	baseFeed, concreteFeed, err = expandFeedFromFeedMap(concreteFeed.getConfigurationPropertyKey(), result)
@@ -257,14 +262,24 @@ func newConcreteFeedConfiguration(feedSourceType, logType string) ConcreteFeedCo
 	switch feedSourceType {
 	case FeedSourceTypeS3:
 		return &S3FeedConfiguration{}
+	case FeedSourceTypeS3V2:
+		return &S3V2FeedConfiguration{}
 	case FeedSourceTypeSQS:
 		return &SQSFeedConfiguration{}
+	case FeedSourceTypeSQSV2:
+		return &SQSV2FeedConfiguration{}
 	case FeedSourceTypeAPI:
 		return newAPIConcreteFeedConfigurationFromLogType(logType)
 	case FeedSourceTypeGCS:
 		return &GCPBucketFeedConfiguration{}
+	case FeedSourceTypeGCSV2:
+		return &GCSV2FeedConfiguration{}
+	case FeedSourceTypeGCSEventDriven:
+		return &GCSEventDrivenFeedConfiguration{}
 	case FeedSourceTypeAzureBlobStore:
 		return &AzureBlobStoreFeedConfiguration{}
+	case FeedSourceTypeAzureBlobStoreV2:
+		return &AzureBlobStoreV2FeedConfiguration{}
 
 	default:
 		return nil
