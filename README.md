@@ -8,7 +8,7 @@
 [![CI](https://github.com/form3tech-oss/terraform-provider-chronicle/actions/workflows/ci.yaml/badge.svg)](https://github.com/form3tech-oss/terraform-provider-chronicle/actions/workflows/ci.yaml)
 [![release](https://github.com/form3tech-oss/terraform-provider-chronicle/actions/workflows/release.yaml/badge.svg)](https://github.com/form3tech-oss/terraform-provider-chronicle/actions/workflows/release.yaml)
 
-Terraform provider for Chronicle
+Terraform provider for Chronicle (now known as Google Security Operations SIEM)
 
 # Documentation
 
