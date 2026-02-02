@@ -12,7 +12,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_Basic(t *testing.T) {
 	displayName := "test" + randString(10)
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
-	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
@@ -24,7 +23,7 @@ func TestAccChronicleFeedGoogleCloudStorageV2_Basic(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedGoogleCloudStorageV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -49,7 +48,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateEnabled(t *testing.T) {
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
 	notEnabled := "false"
-	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
@@ -61,7 +59,7 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateEnabled(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedGoogleCloudStorageV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -69,7 +67,7 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateEnabled(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName1, logType, notEnabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName1, logType, notEnabled, bucketUri, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -92,7 +90,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateLogType(t *testing.T) {
 	logType := "GCP_CLOUDAUDIT"
 	logType1 := "GCP_DNS"
 	enabled := "true"
-	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "ON_SUCCESS"
 	maxLookbackDays := "90"
@@ -104,7 +101,7 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateLogType(t *testing.T) {
 		CheckDestroy: testAccCheckChronicleFeedGoogleCloudStorageV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
@@ -112,7 +109,7 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateLogType(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName1, logType1, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName1, logType1, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType1),
@@ -134,7 +131,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateMaxLookbackDays(t *testing.T
 	displayName1 := "test" + randString(10)
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
-	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
@@ -147,14 +143,14 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateMaxLookbackDays(t *testing.T
 		CheckDestroy: testAccCheckChronicleFeedGoogleCloudStorageV2Destroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays),
 				),
 			},
 			{
-				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName1, logType, enabled, labels, bucketUri, sourceDeleteOptions, maxLookbackDays1),
+				Config: testAccCheckChronicleFeedGoogleCloudStorageV2(displayName1, logType, enabled, bucketUri, sourceDeleteOptions, maxLookbackDays1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageV2Exists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays1),
@@ -171,9 +167,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageV2(displayName, logType, enabled
 			display_name = "%s"
 			log_type = "%s"
 			enabled = %s
-			labels = {
-				"test" = "test"
-			}
 			details {
 				bucket_uri = "gs://%s/"
 				source_delete_options = "%s"
