@@ -200,7 +200,6 @@ func TestAccChronicleFeedAmazonS3_UpdateLogType(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAmazonS3AuthUpdated(t *testing.T, n, region, accessKeyID, secretAccessKey string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -223,7 +222,6 @@ func testAccCheckChronicleFeedAmazonS3AuthUpdated(t *testing.T, n, region, acces
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAmazonS3(displayName, logType, enabled, namespace, labels, s3Uri, s3SourceType,
 	sourceDeleteOptions, region, accesKeyID, secretAccessKey string) string {
 	return fmt.Sprintf(
@@ -277,7 +275,6 @@ func testAccCheckChronicleFeedAmazonS3Destroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedAmazonS3Ref(name string) string {
 	return fmt.Sprintf("chronicle_feed_amazon_s3.%v", name)
 }
