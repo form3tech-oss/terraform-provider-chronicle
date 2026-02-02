@@ -41,25 +41,37 @@ func NewResourceFeedAzureBlobStoreV2() *ResourceFeedAzureBlobStoreV2 {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"shared_key": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							Sensitive:     true,
-							ConflictsWith: []string{"details.0.authentication.0.sas_token", "details.0.authentication.0.workload_identity_federation"},
-							Description:   `The shared access key for the Azure Blob Storage account.`,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
+							ExactlyOneOf: []string{
+								"details.0.authentication.0.shared_key",
+								"details.0.authentication.0.sas_token",
+								"details.0.authentication.0.workload_identity_federation",
+							},
+							Description: `The shared access key for the Azure Blob Storage account.`,
 						},
 						"sas_token": {
-							Type:          schema.TypeString,
-							Optional:      true,
-							Sensitive:     true,
-							ConflictsWith: []string{"details.0.authentication.0.shared_key", "details.0.authentication.0.workload_identity_federation"},
-							Description:   `The SAS (Shared Access Signature) token for the Azure Blob Storage account.`,
+							Type:      schema.TypeString,
+							Optional:  true,
+							Sensitive: true,
+							ExactlyOneOf: []string{
+								"details.0.authentication.0.shared_key",
+								"details.0.authentication.0.sas_token",
+								"details.0.authentication.0.workload_identity_federation",
+							},
+							Description: `The SAS (Shared Access Signature) token for the Azure Blob Storage account.`,
 						},
 						"workload_identity_federation": {
-							Type:          schema.TypeList,
-							Optional:      true,
-							MaxItems:      1,
-							ConflictsWith: []string{"details.0.authentication.0.shared_key", "details.0.authentication.0.sas_token"},
-							Description:   `Azure Workload Identity Federation details for authentication.`,
+							Type:     schema.TypeList,
+							Optional: true,
+							MaxItems: 1,
+							ExactlyOneOf: []string{
+								"details.0.authentication.0.shared_key",
+								"details.0.authentication.0.sas_token",
+								"details.0.authentication.0.workload_identity_federation",
+							},
+							Description: `Azure Workload Identity Federation details for authentication.`,
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"client_id": {
@@ -134,18 +146,15 @@ func (f *ResourceFeedAzureBlobStoreV2) flattenDetailsFromReadOperation(originalC
 	// Import Case
 	if originalConf == nil {
 		authMap := make(map[string]interface{})
-		if readAzureConf.Authentication.AccessKey != "" {
-			authMap["shared_key"] = readAzureConf.Authentication.AccessKey
-		}
-		if readAzureConf.Authentication.SASToken != "" {
-			authMap["sas_token"] = readAzureConf.Authentication.SASToken
-		}
+		// Only populate non-secret auth fields during import
 		if readAzureConf.Authentication.AzureV2WorkloadIdentityFederation != nil {
 			authMap["workload_identity_federation"] = []map[string]interface{}{{
 				"client_id": readAzureConf.Authentication.AzureV2WorkloadIdentityFederation.ClientID,
 				"tenant_id": readAzureConf.Authentication.AzureV2WorkloadIdentityFederation.TenantID,
 			}}
 		}
+		// Note: shared_key and sas_token are not returned by the API
+		// and will remain empty in state after import until explicitly set by user
 
 		return []map[string]interface{}{{
 			"azure_uri":             readAzureConf.AzureURI,

@@ -232,7 +232,7 @@ func testAccCheckChronicleFeedAzureBlobStoreV2Exists(n string) resource.TestChec
 
 func testAccCheckChronicleFeedAzureBlobStoreV2Destroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_azure_blobstore_v2.test" {
+		if rs.Type != "chronicle_feed_azure_blobstore_v2" {
 			continue
 		}
 

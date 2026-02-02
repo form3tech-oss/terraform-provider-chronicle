@@ -211,7 +211,7 @@ func testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(n string) reso
 
 func testAccCheckChronicleFeedGoogleCloudStorageEventDrivenDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_google_cloud_storage_event_driven.test" {
+		if rs.Type != "chronicle_feed_google_cloud_storage_event_driven" {
 			continue
 		}
 

@@ -235,7 +235,7 @@ func testAccCheckChronicleFeedAmazonSQSV2Exists(n string) resource.TestCheckFunc
 
 func testAccCheckChronicleFeedAmazonSQSV2Destroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_amazon_sqs_v2.test" {
+		if rs.Type != "chronicle_feed_amazon_sqs_v2" {
 			continue
 		}
 

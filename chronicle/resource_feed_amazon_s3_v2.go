@@ -44,14 +44,20 @@ func NewResourceFeedAmazonS3V2() *ResourceFeedAmazonS3V2 {
 							Type:             schema.TypeString,
 							Optional:         true,
 							ValidateDiagFunc: validateAWSAccessKeyID,
+							RequiredWith:     []string{"details.0.authentication.0.secret_access_key"},
 							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
-							Description:      `The 20-character access key ID associated with your Amazon IAM account. Required if not using aws_iam_role_arn.`,
+							AtLeastOneOf: []string{
+								"details.0.authentication.0.access_key_id",
+								"details.0.authentication.0.aws_iam_role_arn",
+							},
+							Description: `The 20-character access key ID associated with your Amazon IAM account. Required if not using aws_iam_role_arn.`,
 						},
 						"secret_access_key": {
 							Type:             schema.TypeString,
 							Optional:         true,
 							Sensitive:        true,
 							ValidateDiagFunc: validateAWSSecretAccessKey,
+							RequiredWith:     []string{"details.0.authentication.0.access_key_id"},
 							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
 							Description:      `The 40-character secret access key associated with your Amazon IAM account. Required if not using aws_iam_role_arn.`,
 						},
@@ -59,7 +65,11 @@ func NewResourceFeedAmazonS3V2() *ResourceFeedAmazonS3V2 {
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"details.0.authentication.0.access_key_id", "details.0.authentication.0.secret_access_key"},
-							Description:   `ARN of the AWS IAM role configured to access S3 bucket. Use this for federated authentication instead of access keys.`,
+							AtLeastOneOf: []string{
+								"details.0.authentication.0.access_key_id",
+								"details.0.authentication.0.aws_iam_role_arn",
+							},
+							Description: `ARN of the AWS IAM role configured to access S3 bucket. Use this for federated authentication instead of access keys.`,
 						},
 					},
 				},
@@ -115,13 +125,12 @@ func (f *ResourceFeedAmazonS3V2) flattenDetailsFromReadOperation(originalConf ch
 	// Import Case
 	if originalConf == nil {
 		authMap := make(map[string]interface{})
+		// Only populate non-secret auth fields during import
 		if readS3Conf.Authentication.AWSIAMRoleArn != "" {
 			authMap["aws_iam_role_arn"] = readS3Conf.Authentication.AWSIAMRoleArn
 		}
-		if readS3Conf.Authentication.AccessKeySecretAuth != nil {
-			authMap["access_key_id"] = readS3Conf.Authentication.AccessKeySecretAuth.AccessKeyID
-			authMap["secret_access_key"] = readS3Conf.Authentication.AccessKeySecretAuth.SecretAccessKey
-		}
+		// Note: access_key_id and secret_access_key are not returned by the API
+		// and will remain empty in state after import until explicitly set by user
 
 		return []map[string]interface{}{{
 			"s3_uri":                readS3Conf.S3URI,

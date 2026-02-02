@@ -51,7 +51,12 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 							Type:             schema.TypeString,
 							Optional:         true,
 							ValidateDiagFunc: validateAWSAccessKeyID,
+							RequiredWith:     []string{"details.0.authentication.0.secret_access_key"},
 							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
+							AtLeastOneOf: []string{
+								"details.0.authentication.0.access_key_id",
+								"details.0.authentication.0.aws_iam_role_arn",
+							},
 							Description: `The 20-character access key ID for your Amazon IAM account. ` +
 								`Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
 						},
@@ -60,6 +65,7 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 							Optional:         true,
 							Sensitive:        true,
 							ValidateDiagFunc: validateAWSSecretAccessKey,
+							RequiredWith:     []string{"details.0.authentication.0.access_key_id"},
 							ConflictsWith:    []string{"details.0.authentication.0.aws_iam_role_arn"},
 							Description: `The 40-character secret access key for your Amazon IAM account. ` +
 								`Required if not using aws_iam_role_arn. Same credentials are used for both SQS queue and S3 bucket.`,
@@ -68,6 +74,10 @@ func NewResourceFeedAmazonSQSV2() *ResourceFeedAmazonSQSV2 {
 							Type:          schema.TypeString,
 							Optional:      true,
 							ConflictsWith: []string{"details.0.authentication.0.access_key_id", "details.0.authentication.0.secret_access_key"},
+							AtLeastOneOf: []string{
+								"details.0.authentication.0.access_key_id",
+								"details.0.authentication.0.aws_iam_role_arn",
+							},
 							Description: `ARN of the AWS IAM role configured to access both SQS queue and S3 bucket. ` +
 								`Use this for federated authentication instead of access keys.`,
 						},
@@ -125,13 +135,12 @@ func (f *ResourceFeedAmazonSQSV2) flattenDetailsFromReadOperation(originalConf c
 	// Import Case
 	if originalConf == nil {
 		authMap := make(map[string]interface{})
+		// Only populate non-secret auth fields during import
 		if readSQSConf.Authentication.AWSIAMRoleArn != "" {
 			authMap["aws_iam_role_arn"] = readSQSConf.Authentication.AWSIAMRoleArn
 		}
-		if readSQSConf.Authentication.AccessKeySecretAuth != nil {
-			authMap["access_key_id"] = readSQSConf.Authentication.AccessKeySecretAuth.AccessKeyID
-			authMap["secret_access_key"] = readSQSConf.Authentication.AccessKeySecretAuth.SecretAccessKey
-		}
+		// Note: access_key_id and secret_access_key are not returned by the API
+		// and will remain empty in state after import until explicitly set by user
 
 		return []map[string]interface{}{{
 			"queue":                 readSQSConf.Queue,
