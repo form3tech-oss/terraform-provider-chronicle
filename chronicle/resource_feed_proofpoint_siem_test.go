@@ -132,7 +132,6 @@ func TestAccChronicleProofpointSIEM_UpdateEnabled(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleProofpointSIEMAuthUpdated(t *testing.T, n, user, secret string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -154,7 +153,6 @@ func testAccCheckChronicleProofpointSIEMAuthUpdated(t *testing.T, n, user, secre
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleProofpointSIEM(displayName, enabled, namespace, labels, user, secret string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_proofpoint_siem" "test" {

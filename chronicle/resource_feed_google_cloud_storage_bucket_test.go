@@ -254,7 +254,6 @@ func TestAccChronicleFeedGoogleCloudStorageBucket_UpdateNamespace(t *testing.T) 
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedGoogleCloudStorageBucket(displayName, logType, enabled, namespace, labels, bucket_uri,
 	bucket_source_type, sourceDeleteOptions string) string {
 	return fmt.Sprintf(
@@ -304,7 +303,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageBucketDestroy(s *terraform.State
 	return nil
 }
 
-//nolint:unparam
 func feedGoogleCloudStorageBucketRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_google_cloud_storage_bucket.%v", name)
 }
