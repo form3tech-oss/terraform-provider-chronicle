@@ -18,7 +18,16 @@ test: fmtcheck
 	go test -v . ./chronicle
 
 testacc: fmtcheck
+	@echo "WARNING: Running both V1 and V2 feed tests together. This may fail if your Chronicle SIEM"
+	@echo "         has both V1 and V2 feeds active. Consider using 'make testacc-v1' or 'make testacc-v2' instead."
+	@echo ""
 	TF_ACC=1  go test -v ./chronicle -timeout 120m  -parallel 1
+
+testacc-v1: fmtcheck
+	TF_ACC=1  go test -v ./chronicle -run='TestAcc' -skip='V2|EventDriven' -timeout 120m  -parallel 1
+
+testacc-v2: fmtcheck
+	TF_ACC=1  go test -v ./chronicle -run='TestAcc.*(V2|EventDriven)' -timeout 120m  -parallel 1	
 
 build:
 	@go build -mod=vendor -o $(PROJECT_NAME)
@@ -55,4 +64,4 @@ docs:
 vendor:
 	@go mod tidy && go mod vendor && go mod verify
 
-.PHONY: build install lint test clean testacc vet fmt fmtcheck docs vendor
+.PHONY: build install lint test clean testacc testacc-v1 testacc-v2 vet fmt fmtcheck docs vendor

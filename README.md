@@ -52,7 +52,32 @@ In order to test the provider, you can simply run `make test`.
 make test
 ```
 
-In order to run the full suite of Acceptance tests, set the environment variables listed below and run `make testacc`.
+### Running Acceptance Tests
+ 
+Set the required environment variables and use one of these make targets:
+ 
+- `make testacc-v1` - Run V1 feed tests only
+- `make testacc-v2` - Run V2 feed tests only
+- `make testacc` - Run all tests (see limitations below)
+ 
+#### V1 vs V2 Feed Testing Constraints
+ 
+**Important:** Google Chronicle SIEM instances can only create **one feed version at a time** (either V1 or V2), which affects how you run acceptance tests.
+ 
+**How feed versions work:**
+- When you switch a SIEM to V2 feeds, you can no longer **create** new V1 feeds
+- However, any **existing** V1 feeds remain active and continue running (at time of writing)
+- This means you cannot run the full `make testacc` suite against a single SIEM instance
+ 
+**Recommended approach:**
+ 
+Match your test target to your SIEM configuration:
+- **V1-configured SIEM** → use `make testacc-v1`
+- **V2-configured SIEM** → use `make testacc-v2`
+ 
+Running the wrong test suite will fail because the SIEM won't allow creating feeds of the non-configured version.
+ 
+**Note:** You could theoretically run `make testacc` with multiple SIEM instances (one V1-configured, one V2-configured), but this setup is untested.
 
 The order of precedence for chronicle's API configuration is the following: `Credential file through TF > Access Token through TF > Environment Variable`.
 Environment variables always take the lowest precedence
