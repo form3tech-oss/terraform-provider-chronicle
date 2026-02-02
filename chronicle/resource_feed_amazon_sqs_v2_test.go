@@ -112,7 +112,6 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateEnabled(t *testing.T) {
 	displayName1 := "test" + randString(10)
 	enabled := "true"
 	notEnabled := "false"
-	namespace := "test"
 	labels := `"test"="test"`
 	s3Uri := "test-bucket"
 	queue := "arn:aws:sqs:us-east-1:123456789012:test-queue"
@@ -153,7 +152,6 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateMaxLookbackDays(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	s3Uri := "test-bucket"
 	queue := "arn:aws:sqs:us-east-1:123456789012:test-queue"

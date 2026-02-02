@@ -12,7 +12,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_Basic(t *testing.T) {
 	displayName := "test" + randString(10)
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	pubsubSubscription := "projects/test-project/subscriptions/test-subscription"
@@ -27,13 +26,12 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_Basic(t *testing.T) {
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, enabled, namespace, labels, bucketUri,
+					displayName, enabled, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 					resource.TestCheckResourceAttr(rootRef, "details.0.pubsub_subscription", pubsubSubscription),
 					resource.TestCheckResourceAttr(rootRef, "details.0.source_delete_options", sourceDeleteOptions),
 					resource.TestCheckResourceAttr(rootRef, "details.0.max_lookback_days", maxLookbackDays),
@@ -55,7 +53,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateEnabled(t *testing.
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
 	notEnabled := "false"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	pubsubSubscription := "projects/test-project/subscriptions/test-subscription"
@@ -70,24 +67,22 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateEnabled(t *testing.
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, enabled, namespace, labels, bucketUri,
+					displayName, enabled, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", enabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 				),
 			},
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName1, notEnabled, namespace, labels, bucketUri,
+					displayName1, notEnabled, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
 					resource.TestCheckResourceAttr(rootRef, "log_type", logType),
 					resource.TestCheckResourceAttr(rootRef, "enabled", notEnabled),
-					resource.TestCheckResourceAttr(rootRef, "namespace", namespace),
 				),
 			},
 			{
@@ -104,7 +99,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	pubsubSubscription := "projects/test-project/subscriptions/test-subscription"
@@ -120,7 +114,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, enabled, namespace, labels, bucketUri,
+					displayName, enabled, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -129,7 +123,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 			},
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName1, enabled, namespace, labels, bucketUri,
+					displayName1, enabled, labels, bucketUri,
 					pubsubSubscription1, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -150,7 +144,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	pubsubSubscription := "projects/test-project/subscriptions/test-subscription"
@@ -166,7 +159,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 		Steps: []resource.TestStep{
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName, enabled, namespace, labels, bucketUri,
+					displayName, enabled, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -175,7 +168,7 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *
 			},
 			{
 				Config: testAccCheckChronicleFeedGoogleCloudStorageEventDriven(
-					displayName1, enabled, namespace, labels, bucketUri,
+					displayName1, enabled, labels, bucketUri,
 					pubsubSubscription, sourceDeleteOptions, maxLookbackDays1),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedGoogleCloudStorageEventDrivenExists(rootRef),
@@ -193,7 +186,6 @@ func testAccCheckChronicleFeedGoogleCloudStorageEventDriven(displayName, enabled
 			display_name = "%s"
 			log_type = "GCP_CLOUDAUDIT"
 			enabled = %s
-			namespace = "test"
 			labels = {
 				%s
 			}
