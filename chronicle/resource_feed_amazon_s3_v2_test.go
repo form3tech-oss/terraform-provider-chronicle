@@ -162,7 +162,6 @@ func TestAccChronicleFeedAmazonS3V2_UpdateMaxLookbackDays(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	s3Uri := "test-bucket"
 	sourceDeleteOptions := "NEVER"

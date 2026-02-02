@@ -96,7 +96,6 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateEnabled(t *testing.T) {
 	namespace := "test"
 	labels := `"test"="test"`
 	azureUri := "myaccount.blob.core.windows.net/logs"
-	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
 	sharedKey := "dGVzdHNoYXJlZGtleXRlc3RzaGFyZWRrZXk="
 
@@ -138,12 +137,10 @@ func TestAccChronicleFeedAzureBlobStoreV2_UpdateEnabled(t *testing.T) {
 func TestAccChronicleFeedAzureBlobStoreV2_UpdateMaxLookbackDays(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
-	logType := "AZURE_AD"
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
 	azureUri := "myaccount.blob.core.windows.net/logs"
-	sourceDeleteOptions := "NEVER"
 	maxLookbackDays := "180"
 	maxLookbackDays1 := "90"
 	sharedKey := "dGVzdHNoYXJlZGtleXRlc3RzaGFyZWRrZXk="

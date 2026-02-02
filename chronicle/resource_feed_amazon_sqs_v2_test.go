@@ -110,7 +110,6 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateAuth(t *testing.T) {
 func TestAccChronicleFeedAmazonSQSV2_UpdateEnabled(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
-	logType := "AWS_CLOUDTRAIL"
 	enabled := "true"
 	notEnabled := "false"
 	namespace := "test"
@@ -182,7 +181,7 @@ func TestAccChronicleFeedAmazonSQSV2_UpdateMaxLookbackDays(t *testing.T) {
 			},
 			{
 				Config: testAccCheckChronicleFeedAmazonSQSV2(
-					displayName1, logType, enabled, namespace, labels, s3Uri, queue,
+					displayName1, enabled, namespace, labels, s3Uri, queue,
 					sourceDeleteOptions, maxLookbackDays1, accessKeyID, secretAccessKey),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckChronicleFeedAmazonSQSV2Exists(rootRef),

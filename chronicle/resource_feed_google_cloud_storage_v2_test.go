@@ -142,7 +142,6 @@ func TestAccChronicleFeedGoogleCloudStorageV2_UpdateMaxLookbackDays(t *testing.T
 	displayName1 := "test" + randString(10)
 	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
-	namespace := "test"
 	labels := `"test"="test"`
 	bucketUri := "test-bucket/path"
 	sourceDeleteOptions := "NEVER"

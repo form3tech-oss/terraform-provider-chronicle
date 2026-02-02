@@ -103,7 +103,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateEnabled(t *testing.
 func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
-	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
@@ -150,7 +149,6 @@ func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateSubscription(t *tes
 func TestAccChronicleFeedGoogleCloudStorageEventDriven_UpdateMaxLookbackDays(t *testing.T) {
 	displayName := "test" + randString(10)
 	displayName1 := "test" + randString(10)
-	logType := "GCP_CLOUDAUDIT"
 	enabled := "true"
 	namespace := "test"
 	labels := `"test"="test"`
