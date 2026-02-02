@@ -87,11 +87,7 @@ func newFeedAsMapFromConcreteFeed(name, displayName, logType, namespace string,
 
 func joinBaseFeedMapAndConcreteFeedMap(configurationPropertyKey string, baseFeedMap, concreteFeedMap map[string]interface{}) map[string]interface{} {
 	details := baseFeedMap["details"].(map[string]interface{})
-	var err error
-	details[configurationPropertyKey], err = toMapWithJSONTags(concreteFeedMap)
-	if err != nil {
-		return nil
-	}
+	details[configurationPropertyKey] = concreteFeedMap
 	baseFeedMap["details"] = details
 
 	return baseFeedMap
@@ -174,6 +170,10 @@ func (cli *Client) ReadFeed(name string) (*BaseFeed, *ConcreteFeedConfiguration,
 	feedSourceType := extractFeedSourceTypeFromDetails(details)
 	logType := extractLogTypeFromDetails(details)
 	concreteFeed := newConcreteFeedConfiguration(feedSourceType, logType)
+
+	if concreteFeed == nil {
+		return nil, nil, fmt.Errorf("unsupported feed source type: %s (log type: %s)", feedSourceType, logType)
+	}
 
 	var baseFeed *BaseFeed
 	baseFeed, concreteFeed, err = expandFeedFromFeedMap(concreteFeed.getConfigurationPropertyKey(), result)

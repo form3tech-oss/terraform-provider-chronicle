@@ -244,7 +244,7 @@ func testAccCheckChronicleFeedThinkstCanaryExists(n string) resource.TestCheckFu
 
 func testAccCheckChronicleFeedThinkstCanaryDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_thinkst_canary.test" {
+		if rs.Type != "chronicle_feed_thinkst_canary" {
 			continue
 		}
 

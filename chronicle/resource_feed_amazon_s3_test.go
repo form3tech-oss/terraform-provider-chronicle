@@ -265,7 +265,7 @@ func testAccCheckChronicleFeedAmazonS3Exists(n string) resource.TestCheckFunc {
 
 func testAccCheckChronicleFeedAmazonS3Destroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_amazon_s3.test" {
+		if rs.Type != "chronicle_feed_amazon_s3" {
 			continue
 		}
 

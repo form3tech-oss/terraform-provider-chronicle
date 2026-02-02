@@ -217,7 +217,7 @@ func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityExists(n strin
 
 func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_microsoft_office_365_management_activity.test" {
+		if rs.Type != "chronicle_feed_microsoft_office_365_management_activity" {
 			continue
 		}
 

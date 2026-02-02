@@ -190,7 +190,7 @@ func testAccCheckChronicleProofpointSIEMExists(n string) resource.TestCheckFunc 
 
 func testAccCheckChronicleProofpointSIEMDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_proofpoint_siem.test" {
+		if rs.Type != "chronicle_feed_proofpoint_siem" {
 			continue
 		}
 

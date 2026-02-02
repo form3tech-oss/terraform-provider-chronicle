@@ -250,7 +250,7 @@ func testAccCheckChronicleFeedOktaUsersExists(n string) resource.TestCheckFunc {
 
 func testAccCheckChronicleFeedOktaUsersDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_okta_users.test" {
+		if rs.Type != "chronicle_feed_okta_users" {
 			continue
 		}
 

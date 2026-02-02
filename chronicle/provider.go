@@ -277,6 +277,9 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	if endpoint, isCustom := customEndpoint(d, "rule_custom_endpoint"); isCustom {
 		client.WithRuleBasePath(endpoint)
 	}
+	if endpoint, isCustom := customEndpoint(d, "feed_custom_endpoint"); isCustom {
+		client.WithFeedManagementBasePath(endpoint)
+	}
 	if endpoint, isCustom := customEndpoint(d, "subjects_custom_endpoint"); isCustom {
 		client.WithSubjectsBasePath(endpoint)
 	}
@@ -300,7 +303,7 @@ func getAPIAuthOpts(d *schema.ResourceData) []chronicle.Option {
 
 	if v, ok := d.GetOk("backstoryapi_credentials"); ok {
 		opts = append(opts, chronicle.WithBackstoryAPICredentials(v.(string)))
-	} else if v, ok := d.GetOk("backstoryapi_credentials"); ok {
+	} else if v, ok := d.GetOk("backstoryapi_access_token"); ok {
 		opts = append(opts, chronicle.WithBackstoryAPIAccessToken(v.(string)))
 	} else {
 		env := envSearch(chronicle.BackstoryAPIEnvVar)
@@ -311,7 +314,7 @@ func getAPIAuthOpts(d *schema.ResourceData) []chronicle.Option {
 
 	if v, ok := d.GetOk("ingestionapi_credentials"); ok {
 		opts = append(opts, chronicle.WithIngestionAPICredentials(v.(string)))
-	} else if v, ok := d.GetOk("ingestionapi_credentials"); ok {
+	} else if v, ok := d.GetOk("ingestionapi_access_token"); ok {
 		opts = append(opts, chronicle.WithIngestionAPIAccessToken(v.(string)))
 	} else {
 		env := envSearch(chronicle.IngestionAPIEnvVar)
@@ -327,7 +330,7 @@ func getAPIAuthOpts(d *schema.ResourceData) []chronicle.Option {
 	} else {
 		env := envSearch(chronicle.ForwarderAPIEnvVar)
 		if env != "" {
-			opts = append(opts, chronicle.WithBigQueryAPIEnvVar())
+			opts = append(opts, chronicle.WithForwarderAPIEnvVar())
 		}
 	}
 

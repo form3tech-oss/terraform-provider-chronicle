@@ -245,7 +245,7 @@ func testAccCheckChronicleFeedOktaSystemLogExists(n string) resource.TestCheckFu
 
 func testAccCheckChronicleFeedOktaSystemLogDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_okta_system_log.test" {
+		if rs.Type != "chronicle_feed_okta_system_log" {
 			continue
 		}
 

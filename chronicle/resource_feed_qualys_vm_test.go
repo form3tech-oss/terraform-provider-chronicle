@@ -246,7 +246,7 @@ func testAccCheckChronicleFeedQualysVMExists(n string) resource.TestCheckFunc {
 
 func testAccCheckChronicleFeedQualysVMDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_qualys_vm.test" {
+		if rs.Type != "chronicle_feed_qualys_vm" {
 			continue
 		}
 

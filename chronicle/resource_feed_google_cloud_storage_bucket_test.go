@@ -292,7 +292,7 @@ func testAccCheckChronicleFeedGoogleCloudStorageBucketExists(n string) resource.
 
 func testAccCheckChronicleFeedGoogleCloudStorageBucketDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_google_cloud_storage_bucket.test" {
+		if rs.Type != "chronicle_feed_google_cloud_storage_bucket" {
 			continue
 		}
 
