@@ -1,7 +1,7 @@
 package client
 
 const (
-	sqsV2FeedConfigurationPropertyKey = "amazon_sqs_v2_settings"
+	sqsV2FeedConfigurationPropertyKey = "amazonSqsV2Settings"
 )
 
 type SQSV2FeedConfiguration struct {
@@ -13,8 +13,8 @@ type SQSV2FeedConfiguration struct {
 }
 
 type SQSV2FeedAuthentication struct {
-	AccessKeySecretAuth *SQSV2AccessKeySecretAuth `json:"access_key_secret_auth,omitempty"`
-	AWSIAMRoleArn       string                    `json:"aws_iam_role_arn,omitempty"`
+	AccessKeySecretAuth *SQSV2AccessKeySecretAuth `json:"sqsV2AccessKeySecretAuth,omitempty"`
+	AWSIAMRoleArn       string                    `json:"awsIamRoleArn,omitempty"`
 }
 
 type SQSV2AccessKeySecretAuth struct {
