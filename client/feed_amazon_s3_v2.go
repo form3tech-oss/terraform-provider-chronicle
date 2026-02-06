@@ -12,8 +12,12 @@ type S3V2FeedConfiguration struct {
 }
 
 type S3V2FeedAuthentication struct {
-	AccessKeySecretAuth *S3V2AccessKeySecretAuth `json:"access_key_secret_auth,omitempty"`
-	AWSIAMRoleArn       string                   `json:"aws_iam_role_arn,omitempty"`
+	AccessKeySecretAuth *S3V2AccessKeySecretAuth `json:"accessKeySecretAuth,omitempty"`
+	AWSIAMRoleAuth      *S3V2AWSIAMRoleAuth      `json:"awsIamRoleAuth,omitempty"`
+}
+
+type S3V2AWSIAMRoleAuth struct {
+	AWSIAMRoleArn string `json:"awsIamRoleArn,omitempty"`
 }
 
 type S3V2AccessKeySecretAuth struct {

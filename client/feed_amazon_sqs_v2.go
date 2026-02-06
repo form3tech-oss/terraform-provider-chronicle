@@ -14,7 +14,11 @@ type SQSV2FeedConfiguration struct {
 
 type SQSV2FeedAuthentication struct {
 	AccessKeySecretAuth *SQSV2AccessKeySecretAuth `json:"sqsV2AccessKeySecretAuth,omitempty"`
-	AWSIAMRoleArn       string                    `json:"awsIamRoleArn,omitempty"`
+	AWSIAMRoleAuth      *SQSV2AWSIAMRoleAuth      `json:"awsIamRoleAuth,omitempty"`
+}
+
+type SQSV2AWSIAMRoleAuth struct {
+	AWSIAMRoleArn string `json:"awsIamRoleArn,omitempty"`
 }
 
 type SQSV2AccessKeySecretAuth struct {

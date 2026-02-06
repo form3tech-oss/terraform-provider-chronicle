@@ -106,7 +106,9 @@ func (f *ResourceFeedAmazonS3V2) expandConcreteFeedConfiguration(d *schema.Resou
 
 	// Check which authentication method is used
 	if iamRoleArn, ok := authenticationDetails["aws_iam_role_arn"].(string); ok && iamRoleArn != "" {
-		config.Authentication.AWSIAMRoleArn = iamRoleArn
+		config.Authentication.AWSIAMRoleAuth = &chronicle.S3V2AWSIAMRoleAuth{
+			AWSIAMRoleArn: iamRoleArn,
+		}
 	} else {
 		config.Authentication.AccessKeySecretAuth = &chronicle.S3V2AccessKeySecretAuth{
 			AccessKeyID:     authenticationDetails["access_key_id"].(string),
@@ -126,9 +128,10 @@ func (f *ResourceFeedAmazonS3V2) flattenDetailsFromReadOperation(originalConf ch
 	if originalConf == nil {
 		authMap := make(map[string]interface{})
 		// Only populate non-secret auth fields during import
-		if readS3Conf.Authentication.AWSIAMRoleArn != "" {
-			authMap["aws_iam_role_arn"] = readS3Conf.Authentication.AWSIAMRoleArn
+		if readS3Conf.Authentication.AWSIAMRoleAuth != nil && readS3Conf.Authentication.AWSIAMRoleAuth.AWSIAMRoleArn != "" {
+			authMap["aws_iam_role_arn"] = readS3Conf.Authentication.AWSIAMRoleAuth.AWSIAMRoleArn
 		}
+
 		// Note: access_key_id and secret_access_key are not returned by the API
 		// and will remain empty in state after import until explicitly set by user
 
@@ -143,8 +146,8 @@ func (f *ResourceFeedAmazonS3V2) flattenDetailsFromReadOperation(originalConf ch
 	originalS3Conf := originalConf.(*chronicle.S3V2FeedConfiguration)
 	// Default Case
 	authMap := make(map[string]interface{})
-	if originalS3Conf.Authentication.AWSIAMRoleArn != "" {
-		authMap["aws_iam_role_arn"] = originalS3Conf.Authentication.AWSIAMRoleArn
+	if originalS3Conf.Authentication.AWSIAMRoleAuth != nil && originalS3Conf.Authentication.AWSIAMRoleAuth.AWSIAMRoleArn != "" {
+		authMap["aws_iam_role_arn"] = originalS3Conf.Authentication.AWSIAMRoleAuth.AWSIAMRoleArn
 	}
 	if originalS3Conf.Authentication.AccessKeySecretAuth != nil {
 		authMap["access_key_id"] = originalS3Conf.Authentication.AccessKeySecretAuth.AccessKeyID
