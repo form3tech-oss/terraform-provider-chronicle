@@ -381,7 +381,6 @@ func TestAccChronicleFeedAmazonSQS_UpdateRegion(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAmazonSQSAuthUpdated(t *testing.T, n, region, sqsAccessKeyID,
 	sqsSecretAccessKey, s3AccessKeyID, s3SecretAccessKey string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
@@ -432,7 +431,6 @@ func testAccCheckChronicleFeedAmazonSQS(displayName, logType, enabled, namespace
 		accountNumber, sourceDeleteOptions, sqsAccesKeyID, sqsSecretAccessKey)
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedAmazonSQSWithS3Auth(displayName, logType, enabled, namespace, labels, queue, region,
 	accountNumber, sourceDeleteOptions, sqsAccesKeyID, sqsSecretAccessKey, s3AccesKeyID, s3SecretAccessKey string) string {
 	return fmt.Sprintf(
@@ -479,7 +477,7 @@ func testAccCheckChronicleFeedAmazonSQSExists(n string) resource.TestCheckFunc {
 
 func testAccCheckChronicleFeedAmazonSQSDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_amazon_sqs.test" {
+		if rs.Type != "chronicle_feed_amazon_sqs" {
 			continue
 		}
 
@@ -491,7 +489,6 @@ func testAccCheckChronicleFeedAmazonSQSDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedAmazonSQSRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_amazon_sqs.%v", name)
 }

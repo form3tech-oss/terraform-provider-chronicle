@@ -33,3 +33,6 @@ website/vendor
 !command/test-fixtures/**/.terraform/
 
 dist/
+
+# Compiled provider binary
+terraform-provider-chronicle

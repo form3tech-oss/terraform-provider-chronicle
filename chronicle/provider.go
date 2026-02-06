@@ -195,14 +195,19 @@ func Provider() *schema.Provider {
 			"chronicle_rule":                                          resourceRule(),
 			"chronicle_reference_list":                                resourceReferenceList(),
 			"chronicle_feed_amazon_s3":                                NewResourceFeedAmazonS3().TerraformResource,
+			"chronicle_feed_amazon_s3_v2":                             NewResourceFeedAmazonS3V2().TerraformResource,
 			"chronicle_feed_amazon_sqs":                               NewResourceFeedAmazonSQS().TerraformResource,
+			"chronicle_feed_amazon_sqs_v2":                            NewResourceFeedAmazonSQSV2().TerraformResource,
 			"chronicle_feed_qualys_vm":                                NewResourceFeedQualysVM().TerraformResource,
 			"chronicle_feed_microsoft_office_365_management_activity": NewResourceFeedMicrosoftOffice365ManagementActivity().TerraformResource,
 			"chronicle_feed_okta_system_log":                          NewResourceFeedOktaSystemLog().TerraformResource,
 			"chronicle_feed_okta_users":                               NewResourceFeedOktaUsers().TerraformResource,
 			"chronicle_feed_proofpoint_siem":                          NewResourceFeedProofpointSIEM().TerraformResource,
 			"chronicle_feed_google_cloud_storage_bucket":              NewResourceFeedGoogleCloudStorageBucket().TerraformResource,
+			"chronicle_feed_google_cloud_storage_v2":                  NewResourceFeedGoogleCloudStorageV2().TerraformResource,
+			"chronicle_feed_google_cloud_storage_event_driven":        NewResourceFeedGoogleCloudStorageEventDriven().TerraformResource,
 			"chronicle_feed_azure_blobstore":                          NewResourceFeedAzureBlobStore().TerraformResource,
+			"chronicle_feed_azure_blobstore_v2":                       NewResourceFeedAzureBlobStoreV2().TerraformResource,
 			"chronicle_feed_thinkst_canary":                           NewResourceFeedThinkstCanary().TerraformResource,
 		},
 	}
@@ -272,6 +277,9 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData, p *schema.Pr
 	if endpoint, isCustom := customEndpoint(d, "rule_custom_endpoint"); isCustom {
 		client.WithRuleBasePath(endpoint)
 	}
+	if endpoint, isCustom := customEndpoint(d, "feed_custom_endpoint"); isCustom {
+		client.WithFeedManagementBasePath(endpoint)
+	}
 	if endpoint, isCustom := customEndpoint(d, "subjects_custom_endpoint"); isCustom {
 		client.WithSubjectsBasePath(endpoint)
 	}
@@ -295,7 +303,7 @@ func getAPIAuthOpts(d *schema.ResourceData) []chronicle.Option {
 
 	if v, ok := d.GetOk("backstoryapi_credentials"); ok {
 		opts = append(opts, chronicle.WithBackstoryAPICredentials(v.(string)))
-	} else if v, ok := d.GetOk("backstoryapi_credentials"); ok {
+	} else if v, ok := d.GetOk("backstoryapi_access_token"); ok {
 		opts = append(opts, chronicle.WithBackstoryAPIAccessToken(v.(string)))
 	} else {
 		env := envSearch(chronicle.BackstoryAPIEnvVar)
@@ -306,7 +314,7 @@ func getAPIAuthOpts(d *schema.ResourceData) []chronicle.Option {
 
 	if v, ok := d.GetOk("ingestionapi_credentials"); ok {
 		opts = append(opts, chronicle.WithIngestionAPICredentials(v.(string)))
-	} else if v, ok := d.GetOk("ingestionapi_credentials"); ok {
+	} else if v, ok := d.GetOk("ingestionapi_access_token"); ok {
 		opts = append(opts, chronicle.WithIngestionAPIAccessToken(v.(string)))
 	} else {
 		env := envSearch(chronicle.IngestionAPIEnvVar)
@@ -322,7 +330,7 @@ func getAPIAuthOpts(d *schema.ResourceData) []chronicle.Option {
 	} else {
 		env := envSearch(chronicle.ForwarderAPIEnvVar)
 		if env != "" {
-			opts = append(opts, chronicle.WithBigQueryAPIEnvVar())
+			opts = append(opts, chronicle.WithForwarderAPIEnvVar())
 		}
 	}
 

@@ -156,7 +156,6 @@ func TestAccChronicleFeedMicrosoftOffice365ManagementActivity_UpdateEnabled(t *t
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityAuthUpdated(t *testing.T, n, clientID, clientSecret string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -178,7 +177,6 @@ func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityAuthUpdated(t 
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivity(displayName, enabled, namespace, labels, hostname, tenantID, contentType, clientID, clientSecret string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_microsoft_office_365_management_activity" "test" {
@@ -217,7 +215,7 @@ func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityExists(n strin
 
 func testAccCheckChronicleFeedMicrosoftOffice365ManagementActivityDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_microsoft_office_365_management_activity.test" {
+		if rs.Type != "chronicle_feed_microsoft_office_365_management_activity" {
 			continue
 		}
 

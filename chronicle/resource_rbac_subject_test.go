@@ -196,7 +196,6 @@ func testAccCheckChronicleRBACSubjectDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:all
 func rbacSubjectPolicyRef(name string) string {
 	return fmt.Sprintf("chronicle_rbac_subject.%v", name)
 }

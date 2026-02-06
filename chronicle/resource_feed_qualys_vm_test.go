@@ -187,7 +187,6 @@ func TestAccChronicleFeedQualysVM_UpdateHostname(t *testing.T) {
 	})
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedQualysVMAuthUpdated(t *testing.T, n, user, secret string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[n]
@@ -209,7 +208,6 @@ func testAccCheckChronicleFeedQualysVMAuthUpdated(t *testing.T, n, user, secret 
 	}
 }
 
-//nolint:unparam
 func testAccCheckChronicleFeedQualysVM(displayName, enabled, namespace, labels, hostname, user, secret string) string {
 	return fmt.Sprintf(
 		`resource "chronicle_feed_qualys_vm" "test" {
@@ -246,7 +244,7 @@ func testAccCheckChronicleFeedQualysVMExists(n string) resource.TestCheckFunc {
 
 func testAccCheckChronicleFeedQualysVMDestroy(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "chronicle_feed_qualys_vm.test" {
+		if rs.Type != "chronicle_feed_qualys_vm" {
 			continue
 		}
 
@@ -258,7 +256,6 @@ func testAccCheckChronicleFeedQualysVMDestroy(s *terraform.State) error {
 	return nil
 }
 
-//nolint:unparam
 func feedQualysVMRef(name string) string {
 	return fmt.Sprintf("chronicle_feed_qualys_vm.%v", name)
 }
