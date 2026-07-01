@@ -1,6 +1,7 @@
 package chronicle
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -14,6 +15,8 @@ func resourceRule() *schema.Resource {
 		Read:   resourceRuleRead,
 		Update: resourceRuleUpdate,
 		Delete: resourceRuleDelete,
+
+		CustomizeDiff: resourceRuleCustomizeDiff,
 
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -103,6 +106,41 @@ func resourceRule() *schema.Resource {
 			},
 		},
 	}
+}
+
+// resourceRuleCustomizeDiff verifies rule_text against Chronicle's YARA-L 2.0
+// compiler at plan time, via the same VerifyYARARule call used at apply time,
+// so that an invalid rule fails "terraform plan" instead of only "terraform apply".
+func resourceRuleCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	// Only rule_text affects compilation, so leave unrelated changes (e.g.
+	// live_enabled, alerting_enabled) alone to avoid calling out to Chronicle.
+	if !diff.HasChange("rule_text") {
+		return nil
+	}
+
+	// GetOk reports false both when rule_text is unset/empty and when its
+	// planned value isn't known yet (e.g. interpolated from another
+	// resource's computed attribute). Either way there is nothing concrete
+	// to verify yet, so fall back to the apply-time check in Create/Update.
+	rawRuleText, ok := diff.GetOk("rule_text")
+	if !ok {
+		return nil
+	}
+
+	ruleText, ok := rawRuleText.(string)
+	if !ok || ruleText == "" {
+		return nil
+	}
+
+	client := meta.(*chronicle.Client)
+
+	log.Printf("[DEBUG] Verifying YARA-L 2.0 rule during plan")
+
+	if valid, err := client.VerifyYARARule(ruleText); !valid {
+		return fmt.Errorf("error verifying YARA-L 2.0 rule during plan: %s", err)
+	}
+
+	return nil
 }
 
 func resourceRuleCreate(d *schema.ResourceData, meta interface{}) error {
