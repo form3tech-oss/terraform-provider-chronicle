@@ -1,6 +1,7 @@
 package chronicle
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -10,10 +11,11 @@ import (
 
 func resourceRule() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceRuleCreate,
-		Read:   resourceRuleRead,
-		Update: resourceRuleUpdate,
-		Delete: resourceRuleDelete,
+		Create:        resourceRuleCreate,
+		Read:          resourceRuleRead,
+		Update:        resourceRuleUpdate,
+		Delete:        resourceRuleDelete,
+		CustomizeDiff: resourceRuleCustomizeDiff,
 
 		Importer: &schema.ResourceImporter{
 			StateContext: schema.ImportStatePassthroughContext,
@@ -103,6 +105,30 @@ func resourceRule() *schema.Resource {
 			},
 		},
 	}
+}
+
+func resourceRuleCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	if diff.Id() != "" && !diff.HasChange("rule_text") {
+		return nil
+	}
+
+	if !diff.NewValueKnown("rule_text") {
+		return nil
+	}
+
+	_, newRuleText := diff.GetChange("rule_text")
+	ruleText, ok := newRuleText.(string)
+	if !ok || ruleText == "" {
+		return nil
+	}
+
+	client := meta.(*chronicle.Client)
+
+	if valid, err := client.VerifyYARARule(ruleText); !valid {
+		return fmt.Errorf("error verifying YARA-L 2.0 rule during plan: %s", err)
+	}
+
+	return nil
 }
 
 func resourceRuleCreate(d *schema.ResourceData, meta interface{}) error {
