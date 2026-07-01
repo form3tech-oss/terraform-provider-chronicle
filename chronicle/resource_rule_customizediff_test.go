@@ -261,6 +261,32 @@ func TestResourceRuleCustomizeDiff_SkipsWhenRuleTextUnknown(t *testing.T) {
 	}
 }
 
+func TestResourceRuleCustomizeDiff_SkipsWhenRuleTextBecomesUnknownOnUpdate(t *testing.T) {
+	// Prior state has a concrete rule_text, so planning an update to an
+	// unknown value produces HasChange=true while the new value is not known.
+	// This is the case where diff.NewValueKnown is load-bearing: HasChange
+	// alone would let it through.
+	priorState := existingRuleState(t, customizeDiffValidRuleText, false, false)
+
+	mock := &verifyRuleMock{valid: true, context: "identified no known errors"}
+	cli := newTestRuleClient(t, mock)
+
+	const unknownValue = "74D93920-ED26-11E3-AC10-0800200C9A66"
+
+	_, err := diffRule(t, priorState, map[string]interface{}{
+		"rule_text":        unknownValue,
+		"live_enabled":     false,
+		"alerting_enabled": false,
+	}, cli)
+	if err != nil {
+		t.Fatalf("unexpected error planning update to unknown rule_text: %s", err)
+	}
+
+	if got := mock.callCount(); got != 0 {
+		t.Fatalf("expected verifyRule NOT to be called when new rule_text is unknown, got %d calls", got)
+	}
+}
+
 func TestResourceRuleCustomizeDiff_FailsPlanWhenVerifyResponseOmitsSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

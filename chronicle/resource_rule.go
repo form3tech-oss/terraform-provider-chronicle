@@ -118,16 +118,17 @@ func resourceRuleCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, m
 		return nil
 	}
 
-	// GetOk reports false both when rule_text is unset/empty and when its
-	// planned value isn't known yet (e.g. interpolated from another
-	// resource's computed attribute). Either way there is nothing concrete
-	// to verify yet, so fall back to the apply-time check in Create/Update.
-	rawRuleText, ok := diff.GetOk("rule_text")
-	if !ok {
+	// Skip plan-time verification when the new rule_text is not yet known
+	// (e.g. interpolated from another resource's computed attribute).
+	// CustomizeDiff cannot validate a value that is unknown until apply, so
+	// fall back to the apply-time check in Create/Update.
+	if !diff.NewValueKnown("rule_text") {
 		return nil
 	}
 
-	ruleText, ok := rawRuleText.(string)
+	_, newRuleText := diff.GetChange("rule_text")
+
+	ruleText, ok := newRuleText.(string)
 	if !ok || ruleText == "" {
 		return nil
 	}
