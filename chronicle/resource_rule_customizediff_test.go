@@ -287,6 +287,20 @@ func TestResourceRuleCustomizeDiff_SkipsWhenRuleTextBecomesUnknownOnUpdate(t *te
 	}
 }
 
+func TestResourceRuleCustomizeDiff_SkipsWhenProviderNotConfigured(t *testing.T) {
+	// meta is nil when the provider configuration itself is unknown at plan
+	// time. CustomizeDiff must skip verification rather than panic on the
+	// *chronicle.Client type assertion.
+	_, err := diffRule(t, nil, map[string]interface{}{
+		"rule_text":        customizeDiffValidRuleText,
+		"live_enabled":     false,
+		"alerting_enabled": false,
+	}, nil)
+	if err != nil {
+		t.Fatalf("unexpected error planning with nil provider meta: %s", err)
+	}
+}
+
 func TestResourceRuleCustomizeDiff_FailsPlanWhenVerifyResponseOmitsSuccess(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")

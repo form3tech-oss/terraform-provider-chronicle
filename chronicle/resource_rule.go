@@ -112,6 +112,14 @@ func resourceRule() *schema.Resource {
 // compiler at plan time, via the same VerifyYARARule call used at apply time,
 // so that an invalid rule fails "terraform plan" instead of only "terraform apply".
 func resourceRuleCustomizeDiff(ctx context.Context, diff *schema.ResourceDiff, meta interface{}) error {
+	// meta is nil when the provider configuration itself is not yet known at
+	// plan time (e.g. credentials interpolated from another resource). There
+	// is no client to verify with, so fall back to the apply-time check in
+	// Create/Update instead of panicking on the type assertion below.
+	if meta == nil {
+		return nil
+	}
+
 	// Only rule_text affects compilation, so leave unrelated changes (e.g.
 	// live_enabled, alerting_enabled) alone to avoid calling out to Chronicle.
 	if !diff.HasChange("rule_text") {

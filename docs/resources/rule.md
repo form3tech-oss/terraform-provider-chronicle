@@ -9,6 +9,8 @@ description: |-
 
 Creates a new rule and rule versions
 
+~> `rule_text` is verified against Chronicle's YARA-L 2.0 compiler during `terraform plan` whenever a rule is created or `rule_text` changes, in addition to the existing verification at apply time. Such plans therefore require valid Backstory API credentials and network access to Chronicle, and an invalid rule fails the plan with the compiler error. If the new `rule_text` is not yet known at plan time (for example, interpolated from another resource's computed attribute), verification happens at apply time instead.
+
 ## Example Usage
 
 ```terraform
