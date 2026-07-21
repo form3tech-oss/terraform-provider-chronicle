@@ -12,7 +12,7 @@ Terraform provider for Chronicle (now known as Google Security Operations SIEM)
 
 > ## ⚠️ Deprecated
 >
-> This provider is **deprecated** and no longer maintained. It uses Google's legacy Backstory and Ingestion APIs, which Google is [shutting down on 20 July 2027](https://cloud.google.com/chronicle/docs/reference/migrate-from-legacy-api). New SecOps instances provisioned from 26 October 2026 cannot use these APIs at all.
+> This provider is **deprecated** and no longer maintained. It uses Google's legacy Backstory and Ingestion APIs, which Google is [shutting down on 20 July 2027](https://docs.cloud.google.com/chronicle/docs/deprecations). New SecOps instances provisioned from 26 October 2026 cannot use these APIs at all. See [Google SecOps release notes (20 July 2026)](https://docs.cloud.google.com/chronicle/docs/release-notes#July_20_2026) for details.
 >
 > **Migrate to the official [`hashicorp/google`](https://registry.terraform.io/providers/hashicorp/google/latest/docs) provider**, which supports Chronicle resources via the modern Chronicle API:
 >
@@ -28,7 +28,7 @@ Terraform provider for Chronicle (now known as Google Security Operations SIEM)
 > - **Now:** No new features or resource types will be added.
 > - **20 July 2027:** Legacy APIs are turned off; this provider will stop working. This repository will be archived aligned with Google's deprecation schedule.
 >
-> For migration guidance, see [Migrate from legacy SIEM API to Chronicle API](https://cloud.google.com/chronicle/docs/reference/migrate-from-legacy-api) and [Provision Google SecOps resources with Terraform](https://cloud.google.com/chronicle/docs/terraform).
+> For migration guidance, see [Product deprecations](https://docs.cloud.google.com/chronicle/docs/deprecations), [Migrate from legacy SIEM API to Chronicle API](https://cloud.google.com/chronicle/docs/reference/migrate-from-legacy-api), and [Provision Google SecOps resources with Terraform](https://cloud.google.com/chronicle/docs/terraform).
 
 # Documentation
 
